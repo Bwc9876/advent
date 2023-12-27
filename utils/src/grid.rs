@@ -442,36 +442,33 @@ impl<T> Grid<T> {
     }
 
     /// Like [Grid::relatives] but with `kernels` set to the four cardinal directions.
-    pub fn adjacent<'a>(
-        &'a self,
-        pos: Position,
-    ) -> impl Iterator<Item = (Direction, Position, &T)> + 'a {
+    pub fn adjacent(&self, pos: Position) -> impl Iterator<Item = (Direction, Position, &T)> {
         self.relatives(pos, &CARDINALS)
     }
 
     /// Like [Grid::relatives_wrapped] but with `kernels` set to the four cardinal directions.
-    pub fn adjacent_wrapped<'a>(
-        &'a self,
+    pub fn adjacent_wrapped(
+        &self,
         pos: Position,
-    ) -> impl Iterator<Item = (Direction, Position, &T)> + 'a {
+    ) -> impl Iterator<Item = (Direction, Position, &T)> {
         self.relatives_wrapped(pos, &CARDINALS)
     }
 
     /// Like [Grid::relatives_expand_by] but with `kernels` set to the four cardinal directions.
-    pub fn adjacent_expand_by<'a>(
-        &'a self,
+    pub fn adjacent_expand_by(
+        &self,
         pos: Position,
         expand: usize,
-    ) -> impl Iterator<Item = ((Direction, usize), Position, &T)> + 'a {
+    ) -> impl Iterator<Item = ((Direction, usize), Position, &T)> {
         self.relatives_expand_by(pos, &CARDINALS, expand)
     }
 
     /// Like [Grid::relatives_expand_by_wrapped] but with `kernels` set to the four cardinal directions.
-    pub fn adjacent_expand_by_wrapped<'a>(
-        &'a self,
+    pub fn adjacent_expand_by_wrapped(
+        &self,
         pos: Position,
         expand: usize,
-    ) -> impl Iterator<Item = ((Direction, usize), Position, &T)> + 'a {
+    ) -> impl Iterator<Item = ((Direction, usize), Position, &T)> {
         self.relatives_expand_by_wrapped(pos, &CARDINALS, expand)
     }
 }
@@ -739,7 +736,7 @@ pub mod cursors {
         }
 
         /// Move the cursor forward one step in the direction it is facing and get the value at the new position.
-        pub fn next(&mut self) -> Option<&T> {
+        pub fn advance_get(&mut self) -> Option<&T> {
             self.move_forward();
             self.get()
         }

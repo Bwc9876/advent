@@ -68,7 +68,7 @@ impl YDP {
 pub fn get_dp_and_input() -> (DP, Option<String>) {
     let mut args = args().skip(1);
 
-    let dp = args.next().map(|s| DP::parse(&s.trim())).unwrap_or(DP_ALL);
+    let dp = args.next().map(|s| DP::parse(s.trim())).unwrap_or(DP_ALL);
 
     let input = args.next().map(|s| s.trim().to_string()).map(|i| {
         if i == "-" {
@@ -88,7 +88,7 @@ pub fn get_dp_and_input() -> (DP, Option<String>) {
 pub fn get_ydp_and_input(args: Vec<String>) -> (YDP, Option<String>) {
     let mut args = args.into_iter();
 
-    let ydp = args.next().map(|s| YDP::parse(&s.trim())).unwrap_or(YDP {
+    let ydp = args.next().map(|s| YDP::parse(s.trim())).unwrap_or(YDP {
         year: Selection::All,
         day: Selection::All,
         part: Selection::All,

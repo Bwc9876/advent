@@ -115,15 +115,15 @@ impl<T: Copy + Clone + Debug + Ord> BetterRange<T> {
     }
 }
 
-impl<T: Copy + Clone + Debug + Ord> Into<Range<T>> for BetterRange<T> {
-    fn into(self) -> Range<T> {
-        self.start..self.end
+impl<T: Copy + Clone + Debug + Ord> From<BetterRange<T>> for Range<T> {
+    fn from(val: BetterRange<T>) -> Self {
+        val.start..val.end
     }
 }
 
 impl<T: Copy + Clone + Debug + Ord> From<Range<T>> for BetterRange<T> {
-    fn from(range: Range<T>) -> Self {
-        Self::new(range.start, range.end)
+    fn from(val: Range<T>) -> Self {
+        BetterRange::new(val.start, val.end)
     }
 }
 

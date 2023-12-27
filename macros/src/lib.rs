@@ -150,15 +150,15 @@ pub fn year_runner(item: TokenStream) -> TokenStream {
     .unwrap()
 }
 
-fn make_year_match(years: &Vec<&str>, inner: &str) -> String {
+fn make_year_match(years: &[&str], inner: &str) -> String {
     years
         .iter()
-        .map(|year| format!("{year} => {},", inner.replace("{year}", &year.to_string())))
+        .map(|year| format!("{year} => {},", inner.replace("{year}", year.as_ref())))
         .collect::<Vec<_>>()
         .join("\n")
 }
 
-fn make_year_uses(years: &Vec<&str>) -> String {
+fn make_year_uses(years: &[&str]) -> String {
     years
         .iter()
         .map(|year| format!("use y_{year}::Year{year};", year = year))
@@ -166,7 +166,7 @@ fn make_year_uses(years: &Vec<&str>) -> String {
         .join("\n")
 }
 
-fn make_run_all_years(years: &Vec<&str>) -> String {
+fn make_run_all_years(years: &[&str]) -> String {
     years
         .iter()
         .map(|year| {
@@ -179,7 +179,7 @@ fn make_run_all_years(years: &Vec<&str>) -> String {
         .join("\n")
 }
 
-fn make_run_year(years: &Vec<&str>) -> String {
+fn make_run_year(years: &[&str]) -> String {
     let inner = make_year_match(years, "Year{year}::run_dp(input.as_deref(), dp)");
     format!(
         "

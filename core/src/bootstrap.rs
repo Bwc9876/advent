@@ -86,7 +86,7 @@ fn make_examples(folder: &Path) {
 fn make_lib(folder: &Path, year: &str) {
     let lib_path = folder.join("lib.rs");
 
-    let contents = YEAR_TEMPLATE.replace("{year}", &year);
+    let contents = YEAR_TEMPLATE.replace("{year}", year);
 
     std::fs::write(lib_path, contents).unwrap();
 }
@@ -94,7 +94,7 @@ fn make_lib(folder: &Path, year: &str) {
 fn make_main(folder: &Path, year: &str) {
     let main_path = folder.join("main.rs");
 
-    let contents = RUNNER_TEMPLATE.replace("{year}", &year);
+    let contents = RUNNER_TEMPLATE.replace("{year}", year);
 
     std::fs::write(main_path, contents).unwrap();
 }
@@ -106,14 +106,14 @@ fn make_src(folder: &Path, year: &str) {
 
     make_days(&src_path);
     make_examples(&src_path);
-    make_lib(&src_path, &year);
-    make_main(&src_path, &year);
+    make_lib(&src_path, year);
+    make_main(&src_path, year);
 }
 
 fn make_cargo(folder: &Path, year: &str) {
     let cargo_path = folder.join("Cargo.toml");
 
-    let contents = CARGO_TEMPLATE.replace("{year}", &year);
+    let contents = CARGO_TEMPLATE.replace("{year}", year);
 
     std::fs::write(cargo_path, contents).unwrap();
 }
@@ -131,7 +131,7 @@ fn replace_year_list(new_year: &str) {
         .get(1)
         .unwrap()
         .as_str()
-        .split(",")
+        .split(',')
         .map(|s| s.parse::<usize>().unwrap())
         .collect::<Vec<_>>();
 

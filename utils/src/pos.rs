@@ -518,11 +518,8 @@ impl Position {
     /// assert_eq!(relatives, vec![(Position::new(0, -1), Direction::North), (Position::new(1, 0), Direction::East)]);
     /// ```
     ///
-    pub fn relatives<'a, T: Movement>(
-        self,
-        kernels: &'a [T],
-    ) -> impl Iterator<Item = (Self, T)> + 'a {
-        kernels.into_iter().map(move |k| (self.move_dir(*k), *k))
+    pub fn relatives<T: Movement>(self, kernels: &[T]) -> impl Iterator<Item = (Self, T)> + '_ {
+        kernels.iter().map(move |k| (self.move_dir(*k), *k))
     }
 
     /// Get all positions relative to this position by a list of directions,
@@ -537,11 +534,11 @@ impl Position {
     /// assert_eq!(relatives, vec![(Position::new(1, 0), Direction::East)]);
     /// ```
     ///
-    pub fn relatives_checked<'a, T: Movement>(
+    pub fn relatives_checked<T: Movement>(
         self,
-        kernels: &'a [T],
+        kernels: &[T],
         bounds: PositiveType,
-    ) -> impl Iterator<Item = (Self, T)> + 'a {
+    ) -> impl Iterator<Item = (Self, T)> + '_ {
         kernels
             .iter()
             .filter_map(move |k| self.move_dir_checked(*k, bounds).map(|p| (p, *k)))
@@ -566,13 +563,13 @@ impl Position {
     /// assert_eq!(relatives, expected);
     /// ```
     ///
-    pub fn relatives_expand_by<'a, T: Movement>(
+    pub fn relatives_expand_by<T: Movement>(
         self,
-        kernels: &'a [T],
+        kernels: &[T],
         times: usize,
-    ) -> impl Iterator<Item = ((T, usize), Self)> + 'a {
+    ) -> impl Iterator<Item = ((T, usize), Self)> + '_ {
         kernels
-            .into_iter()
+            .iter()
             .flat_map(move |k| (1..=times).map(move |t| ((*k, t), self.move_times(*k, t))))
     }
 
@@ -594,13 +591,13 @@ impl Position {
     /// assert_eq!(relatives, expected);
     /// ```
     ///
-    pub fn relatives_expand_by_checked<'a, T: Movement>(
+    pub fn relatives_expand_by_checked<T: Movement>(
         self,
-        kernels: &'a [T],
+        kernels: &[T],
         times: usize,
         bounds: PositiveType,
-    ) -> impl Iterator<Item = ((T, usize), Self)> + 'a {
-        kernels.into_iter().flat_map(move |k| {
+    ) -> impl Iterator<Item = ((T, usize), Self)> + '_ {
+        kernels.iter().flat_map(move |k| {
             (1..=times)
                 .filter_map(move |t| self.move_times_checked(*k, t, bounds).map(|p| ((*k, t), p)))
         })
@@ -747,9 +744,9 @@ impl From<(CompType, CompType)> for Position {
     }
 }
 
-impl Into<(CompType, CompType)> for Position {
-    fn into(self) -> (CompType, CompType) {
-        (self.x, self.y)
+impl From<Position> for (CompType, CompType) {
+    fn from(val: Position) -> Self {
+        (val.x, val.y)
     }
 }
 
@@ -762,9 +759,9 @@ impl From<(usize, usize)> for Position {
     }
 }
 
-impl Into<(usize, usize)> for Position {
-    fn into(self) -> (usize, usize) {
-        (self.x as usize, self.y as usize)
+impl From<Position> for (usize, usize) {
+    fn from(val: Position) -> Self {
+        (val.x as usize, val.y as usize)
     }
 }
 
