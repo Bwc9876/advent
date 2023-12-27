@@ -1,4 +1,4 @@
-use core::{get_ydp_and_input, make_year, Year, Selection, YDP, DP};
+use core::{get_ydp_and_input, make_year, Selection, Year, DP, YDP};
 use macros::global_runner;
 
 global_runner!(2023);
@@ -9,10 +9,10 @@ fn run_ydp(ydp: YDP, input: Option<String>) {
     match ydp.year {
         Selection::All => {
             run_all_years(&dp, input);
-        },
+        }
         Selection::Single(year) => {
             run_year(year, dp, input.as_deref());
-        },
+        }
     }
 }
 
@@ -22,20 +22,18 @@ fn main() {
     let command = args.get(0);
 
     match command {
-        Some(command) => {
-            match command.as_str() {
-                "new" => {
-                    let year = args.get(1).expect("No year provided");
-                    make_year(year);
-                },
-                "solve" | "run" => {
-                    let (ydp, input) = get_ydp_and_input(args[1..].to_vec());
-                    run_ydp(ydp, input);
-                }
-                _ => {
-                    println!("Unknown command: {}", command);
-                    println!("Available commands: new, solve");
-                }
+        Some(command) => match command.as_str() {
+            "new" => {
+                let year = args.get(1).expect("No year provided");
+                make_year(year);
+            }
+            "solve" | "run" => {
+                let (ydp, input) = get_ydp_and_input(args[1..].to_vec());
+                run_ydp(ydp, input);
+            }
+            _ => {
+                println!("Unknown command: {}", command);
+                println!("Available commands: new, solve");
             }
         },
         None => {

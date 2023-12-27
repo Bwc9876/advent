@@ -5,19 +5,31 @@ use core::MAX_DAY;
 use proc_macro::TokenStream;
 
 fn make_day_mods() -> String {
-    (1..=MAX_DAY).map(|day| format!("mod day_{day};", day = day)).collect::<Vec<_>>().join("\n")
+    (1..=MAX_DAY)
+        .map(|day| format!("mod day_{day};", day = day))
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 fn make_use_days() -> String {
-    (1..=MAX_DAY).map(|day| format!("use day_{day}::Day{day};", day = day)).collect::<Vec<_>>().join("\n")
+    (1..=MAX_DAY)
+        .map(|day| format!("use day_{day}::Day{day};", day = day))
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 fn make_day_match(inner: &str) -> String {
-    (1..=MAX_DAY).map(|day| format!("{day} => {},", inner.replace("{day}", &day.to_string()))).collect::<Vec<_>>().join("\n")
+    (1..=MAX_DAY)
+        .map(|day| format!("{day} => {},", inner.replace("{day}", &day.to_string())))
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 fn make_day_tests() -> String {
-    (1..=MAX_DAY).map(|day| format!("
+    (1..=MAX_DAY)
+        .map(|day| {
+            format!(
+                "
     #[test]
     fn test_day_{day}_part_1() {{
         Day{day}::assert_part_1();
@@ -26,33 +38,44 @@ fn make_day_tests() -> String {
     #[test]
     fn test_day_{day}_part_2() {{
         Day{day}::assert_part_2();
-    }}")).collect::<Vec<_>>().join("\n")
+    }}"
+            )
+        })
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 fn get_solve_day() -> String {
     let inner = make_day_match("Day{day}::run_part(part, input)");
-    format!("
+    format!(
+        "
     fn solve_day(day: usize, part: usize, input: Option<&str>) -> Option<String> {{
         match day {{
             {inner}
             _ => None,
         }}
-    }}", inner = inner)
+    }}",
+        inner = inner
+    )
 }
 
 fn get_solve_day_both_parts() -> String {
     let inner = make_day_match("Day{day}::run_all_parts(extra_indent)");
-    format!("
+    format!(
+        "
     fn solve_day_both_parts(day: usize, extra_indent: &str) {{
         match day {{
             {inner}
             _ => (),
         }}
-    }}", inner = inner)
+    }}",
+        inner = inner
+    )
 }
 
 fn make_year_struct(year: &str) -> String {
-    format!("
+    format!(
+        "
         pub struct Year{year};
 
         impl Year for Year{year} {{
@@ -61,18 +84,24 @@ fn make_year_struct(year: &str) -> String {
             {solve_day}
 
             {solve_day_both_parts}
-        }}", solve_day = get_solve_day(), solve_day_both_parts = get_solve_day_both_parts())
+        }}",
+        solve_day = get_solve_day(),
+        solve_day_both_parts = get_solve_day_both_parts()
+    )
 }
 
 fn make_tests() -> String {
-    format!("
+    format!(
+        "
     #[cfg(test)]
     mod tests {{
         use super::*;
         use core::{{Day, Year}};
 
         {day_tests}
-    }}", day_tests = make_day_tests())
+    }}",
+        day_tests = make_day_tests()
+    )
 }
 
 #[proc_macro]
@@ -86,7 +115,8 @@ pub fn year(item: TokenStream) -> TokenStream {
 
     let tests = make_tests();
 
-    format!("
+    format!(
+        "
         {mods}
 
         use core::{{Year, Day}};
@@ -95,14 +125,18 @@ pub fn year(item: TokenStream) -> TokenStream {
         {year_struct}
 
         {tests}
-    ").parse::<TokenStream>().unwrap()
+    "
+    )
+    .parse::<TokenStream>()
+    .unwrap()
 }
 
 #[proc_macro]
 pub fn year_runner(item: TokenStream) -> TokenStream {
     let year = item.to_string();
 
-    format!("
+    format!(
+        "
     use core::{{Year, get_dp_and_input}};
 
     use y_{year}::Year{year};
@@ -110,24 +144,45 @@ pub fn year_runner(item: TokenStream) -> TokenStream {
     fn main() {{
         let (dp, input) = get_dp_and_input();
         Year{year}::run_dp(input.as_deref(), dp);
-    }}").parse::<TokenStream>().unwrap()
+    }}"
+    )
+    .parse::<TokenStream>()
+    .unwrap()
 }
 
 fn make_year_match(years: &Vec<&str>, inner: &str) -> String {
-    years.iter().map(|year| format!("{year} => {},", inner.replace("{year}", &year.to_string()))).collect::<Vec<_>>().join("\n")
+    years
+        .iter()
+        .map(|year| format!("{year} => {},", inner.replace("{year}", &year.to_string())))
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 fn make_year_uses(years: &Vec<&str>) -> String {
-    years.iter().map(|year| format!("use y_{year}::Year{year};", year = year)).collect::<Vec<_>>().join("\n")
+    years
+        .iter()
+        .map(|year| format!("use y_{year}::Year{year};", year = year))
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 fn make_run_all_years(years: &Vec<&str>) -> String {
-    years.iter().map(|year| format!("Year{year}::run_dp(input.as_deref(), dp.clone());", year = year)).collect::<Vec<_>>().join("\n")
+    years
+        .iter()
+        .map(|year| {
+            format!(
+                "Year{year}::run_dp(input.as_deref(), dp.clone());",
+                year = year
+            )
+        })
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 fn make_run_year(years: &Vec<&str>) -> String {
     let inner = make_year_match(years, "Year{year}::run_dp(input.as_deref(), dp)");
-    format!("
+    format!(
+        "
     fn run_year(year: usize, dp: DP, input: Option<&str>) {{
         match year {{
             {inner}
@@ -135,7 +190,9 @@ fn make_run_year(years: &Vec<&str>) -> String {
                 println!(\"Unknown year: {{year}}\");
             }}
         }}
-    }}", inner = inner)
+    }}",
+        inner = inner
+    )
 }
 
 #[proc_macro]
@@ -147,12 +204,16 @@ pub fn global_runner(item: TokenStream) -> TokenStream {
     let run_all_years = make_run_all_years(&years);
     let run_year = make_run_year(&years);
 
-    format!("
+    format!(
+        "
     {year_uses}
 
     {run_year}
 
     fn run_all_years(dp: &DP, input: Option<String>) {{
         {run_all_years}
-    }}").parse::<TokenStream>().unwrap()
+    }}"
+    )
+    .parse::<TokenStream>()
+    .unwrap()
 }

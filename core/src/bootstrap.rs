@@ -4,7 +4,6 @@ use regex::Regex;
 
 use crate::MAX_DAY;
 
-
 const DAY_TEMPLATE: &str = "
 use core::{Day, day_stuff, ex_for_day};
 
@@ -119,7 +118,7 @@ fn make_cargo(folder: &Path, year: &str) {
     std::fs::write(cargo_path, contents).unwrap();
 }
 
-fn replace_year_list(new_year: &str ) {
+fn replace_year_list(new_year: &str) {
     let main = include_str!("../../src/main.rs");
 
     let global_runner_pattern = Regex::new(r"global_runner!\(([\d,]+)\)").unwrap();
@@ -128,13 +127,23 @@ fn replace_year_list(new_year: &str ) {
 
     let full = matches.get(0).unwrap().as_str();
 
-    let mut years = matches.get(1).unwrap().as_str().split(",").map(|s| s.parse::<usize>().unwrap()).collect::<Vec<_>>();
+    let mut years = matches
+        .get(1)
+        .unwrap()
+        .as_str()
+        .split(",")
+        .map(|s| s.parse::<usize>().unwrap())
+        .collect::<Vec<_>>();
 
     years.push(new_year.parse::<usize>().unwrap());
 
     years.sort();
 
-    let new_years = years.iter().map(|y| y.to_string()).collect::<Vec<_>>().join(",");
+    let new_years = years
+        .iter()
+        .map(|y| y.to_string())
+        .collect::<Vec<_>>()
+        .join(",");
 
     let new_main = main.replace(full, &format!("global_runner!({})", new_years));
 

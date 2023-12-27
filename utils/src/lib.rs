@@ -1,14 +1,19 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
+pub mod day_utils;
+pub mod dir;
+pub mod geom;
+pub mod grid;
+pub mod line;
+pub mod pos;
+pub mod range;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+pub mod prelude {
+    pub use crate::day_utils::*;
+    pub use crate::dir::*;
+    pub use crate::geom;
+    pub use crate::grid::cursors::*;
+    pub use crate::grid::tiles::*;
+    pub use crate::grid::*;
+    pub use crate::line::*;
+    pub use crate::pos::*;
+    pub use crate::range::*;
 }

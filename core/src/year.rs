@@ -1,4 +1,4 @@
-use crate::parser::{DP, Selection};
+use crate::parser::{Selection, DP};
 
 use super::MAX_DAY;
 
@@ -20,15 +20,13 @@ pub trait Year {
         match dp.day {
             Selection::All => {
                 Self::solve_all_days();
-            },
-            Selection::Single(day) => {
-                match dp.part {
-                    Selection::All => {
-                        Self::solve_day_both_parts(day, "");
-                    },
-                    Selection::Single(part) => {
-                        Self::solve_day(day, part, input);
-                    },
+            }
+            Selection::Single(day) => match dp.part {
+                Selection::All => {
+                    Self::solve_day_both_parts(day, "");
+                }
+                Selection::Single(part) => {
+                    Self::solve_day(day, part, input);
                 }
             },
         }

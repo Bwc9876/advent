@@ -1,5 +1,5 @@
-use std::io::{stdin, Read};
 use std::env::args;
+use std::io::{stdin, Read};
 #[derive(Clone, Debug)]
 pub enum Selection {
     All,
@@ -7,7 +7,6 @@ pub enum Selection {
 }
 
 impl Selection {
-
     fn parse(input: &str) -> Self {
         if input == "*" {
             Self::All
@@ -16,7 +15,6 @@ impl Selection {
             Self::Single(input)
         }
     }
-
 }
 
 #[derive(Clone, Debug)]
@@ -31,19 +29,14 @@ const DP_ALL: DP = DP {
 };
 
 impl DP {
-
     fn parse(input: &str) -> Self {
         let mut split = input.split(':');
 
         let day = split.next().map(Selection::parse).unwrap_or(Selection::All);
         let part = split.next().map(Selection::parse).unwrap_or(Selection::All);
 
-        Self {
-            day,
-            part,
-        }
+        Self { day, part }
     }
-
 }
 
 #[derive(Clone, Debug)]
@@ -54,7 +47,6 @@ pub struct YDP {
 }
 
 impl YDP {
-
     fn parse(input: &str) -> Self {
         let mut split = input.split(':');
 
@@ -62,11 +54,7 @@ impl YDP {
         let day = split.next().map(Selection::parse).unwrap_or(Selection::All);
         let part = split.next().map(Selection::parse).unwrap_or(Selection::All);
 
-        Self {
-            year,
-            day,
-            part,
-        }
+        Self { year, day, part }
     }
 
     pub fn to_dp(&self) -> DP {
@@ -75,7 +63,6 @@ impl YDP {
             part: self.part.clone(),
         }
     }
-
 }
 
 pub fn get_dp_and_input() -> (DP, Option<String>) {
@@ -86,7 +73,9 @@ pub fn get_dp_and_input() -> (DP, Option<String>) {
     let input = args.next().map(|s| s.trim().to_string()).map(|i| {
         if i == "-" {
             let mut input = String::new();
-            stdin().read_to_string(&mut input).expect("Failed to read input");
+            stdin()
+                .read_to_string(&mut input)
+                .expect("Failed to read input");
             input.trim().to_string()
         } else {
             i
@@ -97,7 +86,6 @@ pub fn get_dp_and_input() -> (DP, Option<String>) {
 }
 
 pub fn get_ydp_and_input(args: Vec<String>) -> (YDP, Option<String>) {
-
     let mut args = args.into_iter();
 
     let ydp = args.next().map(|s| YDP::parse(&s.trim())).unwrap_or(YDP {
@@ -109,7 +97,9 @@ pub fn get_ydp_and_input(args: Vec<String>) -> (YDP, Option<String>) {
     let input = args.next().map(|s| s.trim().to_string()).map(|i| {
         if i == "-" {
             let mut input = String::new();
-            stdin().read_to_string(&mut input).expect("Failed to read input");
+            stdin()
+                .read_to_string(&mut input)
+                .expect("Failed to read input");
             input.trim().to_string()
         } else {
             i

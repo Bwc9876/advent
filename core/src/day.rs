@@ -3,7 +3,13 @@ use std::time::Instant;
 #[macro_export]
 macro_rules! ex_for_day {
     ($day:literal, $part:literal) => {
-        include_str!(concat!("examples/day_", stringify!($day), "/", stringify!($part), ".txt"))
+        include_str!(concat!(
+            "examples/day_",
+            stringify!($day),
+            "/",
+            stringify!($part),
+            ".txt"
+        ))
     };
 }
 
@@ -11,7 +17,7 @@ macro_rules! ex_for_day {
 macro_rules! day_stuff {
     ($day:literal, $e_1:literal, $e_2:literal) => {
         day_stuff!($day, $e_1, $e_2, String);
-        
+
         fn parse_input(input: &str) -> Self::Input {
             input.to_string()
         }
@@ -19,12 +25,12 @@ macro_rules! day_stuff {
 
     ($day:literal, $e_1:literal, $e_2:literal, $i: ty) => {
         type Input = $i;
-        
+
         const DAY: usize = $day;
         const EXAMPLE_INPUT_1: &'static str = ex_for_day!($day, 1);
         const EXAMPLE_INPUT_2: &'static str = ex_for_day!($day, 2);
         const EXPECTED_1: &'static str = $e_1;
-        const EXPECTED_2: &'static str = $e_2;  
+        const EXPECTED_2: &'static str = $e_2;
     }
 }
 
@@ -40,7 +46,6 @@ macro_rules! day_stuff {
 /// Then, any runner can use `run_part` to run a part of the day with a given input or the example input.
 ///
 pub trait Day {
-
     type Input;
 
     const DAY: usize = 0;
@@ -68,12 +73,22 @@ pub trait Day {
             2 => Self::part_2(input),
             _ => panic!("Invalid part number"),
         };
-        println!("Day {} Part {}: {} ({}ms)", Self::DAY, part, solution.as_ref().unwrap_or(&"Not implemented".to_string()), instant.elapsed().as_millis());
+        println!(
+            "Day {} Part {}: {} ({}ms)",
+            Self::DAY,
+            part,
+            solution.as_ref().unwrap_or(&"Not implemented".to_string()),
+            instant.elapsed().as_millis()
+        );
         solution
     }
 
     fn run_all_parts(extra_indent: &str) {
-        println!("{extra_indent}Day {day}:", extra_indent = extra_indent, day = Self::DAY);
+        println!(
+            "{extra_indent}Day {day}:",
+            extra_indent = extra_indent,
+            day = Self::DAY
+        );
         for part in 1..=2 {
             let part_time = Instant::now();
             let solution = match part {
@@ -81,7 +96,12 @@ pub trait Day {
                 2 => Self::part_2(Self::parse_input(Self::EXAMPLE_INPUT_2)),
                 _ => panic!("Invalid part number"),
             };
-            println!("{extra_indent}  Part {}: {} ({}ms)", part, solution.as_ref().unwrap_or(&"Not implemented".to_string()), part_time.elapsed().as_millis());
+            println!(
+                "{extra_indent}  Part {}: {} ({}ms)",
+                part,
+                solution.as_ref().unwrap_or(&"Not implemented".to_string()),
+                part_time.elapsed().as_millis()
+            );
         }
     }
 
@@ -119,7 +139,6 @@ mod tests {
     struct TestDay;
 
     impl Day for TestDay {
-
         type Input = String;
 
         const EXAMPLE_INPUT_1: &'static str = "Hello, world!";
@@ -144,7 +163,6 @@ mod tests {
     struct TestDay2;
 
     impl Day for TestDay2 {
-
         type Input = Vec<String>;
 
         const EXAMPLE_INPUT_1: &'static str = "A\nB\nC";
