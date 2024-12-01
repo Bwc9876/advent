@@ -5,7 +5,7 @@ use regex::Regex;
 use crate::MAX_DAY;
 
 const DAY_TEMPLATE: &str = "
-use core::{Day, day_stuff, ex_for_day};
+use advent_core::{Day, day_stuff, ex_for_day};
 
 pub struct Day{day};
 
@@ -42,7 +42,7 @@ version = \"0.1.0\"
 edition = \"2021\"
 
 [dependencies]
-core = { path = \"../../core\" }
+advent_core = { path = \"../../advent_core\" }
 macros = { path = \"../../macros\" }
 utils = { path = \"../../utils\" }
 ";

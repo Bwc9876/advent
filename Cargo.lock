@@ -6,9 +6,16 @@ version = 4
 name = "advent"
 version = "0.1.0"
 dependencies = [
- "core",
+ "advent_core",
  "macros",
  "y_2024",
+]
+
+[[package]]
+name = "advent_core"
+version = "0.1.0"
+dependencies = [
+ "regex",
 ]
 
 [[package]]
@@ -21,17 +28,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "core"
-version = "0.1.0"
-dependencies = [
- "regex",
-]
-
-[[package]]
 name = "macros"
 version = "0.1.0"
 dependencies = [
- "core",
+ "advent_core",
 ]
 
 [[package]]
@@ -77,7 +77,7 @@ version = "0.1.0"
 name = "y_2024"
 version = "0.1.0"
 dependencies = [
- "core",
+ "advent_core",
  "macros",
  "utils",
 ]

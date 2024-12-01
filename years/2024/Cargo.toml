@@ -5,6 +5,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-core = { path = "../../core" }
+advent_core = { path = "../../advent_core" }
 macros = { path = "../../macros" }
 utils = { path = "../../utils" }

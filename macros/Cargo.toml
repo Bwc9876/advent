@@ -9,4 +9,4 @@ edition = "2021"
 proc-macro = true
 
 [dependencies]
-core = { path = "../core" } 
+advent_core = { path = "../advent_core" } 

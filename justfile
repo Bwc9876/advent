@@ -16,3 +16,6 @@ dyp DYP in="":
 
 prep:
     cargo run --release -- new {{year}}
+
+start:
+    codium . --goto years/{{year}}/src/day_{{day}}.rs

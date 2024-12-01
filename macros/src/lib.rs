@@ -1,6 +1,6 @@
 extern crate proc_macro;
 
-use core::MAX_DAY;
+use advent_core::MAX_DAY;
 
 use proc_macro::TokenStream;
 
@@ -96,7 +96,7 @@ fn make_tests() -> String {
     #[cfg(test)]
     mod tests {{
         use super::*;
-        use core::{{Day, Year}};
+        use advent_core::{{Day, Year}};
 
         {day_tests}
     }}",
@@ -119,7 +119,7 @@ pub fn year(item: TokenStream) -> TokenStream {
         "
         {mods}
 
-        use core::{{Year, Day}};
+        use advent_core::{{Year, Day}};
         {uses}
 
         {year_struct}
@@ -137,7 +137,7 @@ pub fn year_runner(item: TokenStream) -> TokenStream {
 
     format!(
         "
-    use core::{{Year, get_dp_and_input}};
+    use advent_core::{{Year, get_dp_and_input}};
 
     use y_{year}::Year{year};
 
