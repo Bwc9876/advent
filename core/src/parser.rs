@@ -1,5 +1,7 @@
 use std::env::args;
 use std::io::{stdin, Read};
+use std::fs;
+
 #[derive(Clone, Debug)]
 pub enum Selection {
     All,
@@ -102,7 +104,7 @@ pub fn get_ydp_and_input(args: Vec<String>) -> (YDP, Option<String>) {
                 .expect("Failed to read input");
             input.trim().to_string()
         } else {
-            i
+            fs::read_to_string(i).expect("Failed to read input file")
         }
     });
 

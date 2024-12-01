@@ -1,3 +1,4 @@
+
 use macros::year;
 
-year!(2023);
+year!(2024);

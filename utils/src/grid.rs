@@ -393,7 +393,7 @@ impl<T> Grid<T> {
         &'a self,
         pos: Position,
         kernels: &'a [M],
-    ) -> impl Iterator<Item = (M, Position, &T)> + 'a {
+    ) -> impl Iterator<Item = (M, Position, &'a T)> + 'a {
         pos.relatives(kernels)
             .filter_map(move |(pos, dir)| self.get(pos).map(|v| (dir, pos, v)))
     }
@@ -406,7 +406,7 @@ impl<T> Grid<T> {
         &'a self,
         pos: Position,
         kernels: &'a [M],
-    ) -> impl Iterator<Item = (M, Position, &T)> + 'a {
+    ) -> impl Iterator<Item = (M, Position, &'a T)> + 'a {
         pos.relatives(kernels)
             .map(move |(pos, dir)| (dir, pos, self.get_wrapped(pos)))
     }
@@ -421,7 +421,7 @@ impl<T> Grid<T> {
         pos: Position,
         kernels: &'a [M],
         expand: usize,
-    ) -> impl Iterator<Item = ((M, usize), Position, &T)> + 'a {
+    ) -> impl Iterator<Item = ((M, usize), Position, &'a T)> + 'a {
         pos.relatives_expand_by(kernels, expand)
             .filter_map(move |(dir, pos)| self.get(pos).map(|v| (dir, pos, v)))
     }
@@ -436,7 +436,7 @@ impl<T> Grid<T> {
         pos: Position,
         kernels: &'a [M],
         expand: usize,
-    ) -> impl Iterator<Item = ((M, usize), Position, &T)> + 'a {
+    ) -> impl Iterator<Item = ((M, usize), Position, &'a T)> + 'a {
         pos.relatives_expand_by(kernels, expand)
             .map(move |(dir, pos)| (dir, pos, self.get_wrapped(pos)))
     }

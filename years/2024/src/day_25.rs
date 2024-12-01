@@ -1,11 +1,11 @@
 
 use core::{Day, day_stuff, ex_for_day};
 
-pub struct Day1;
+pub struct Day25;
 
-impl Day for Day1 {
+impl Day for Day25 {
 
-    day_stuff!(1, "", "");
+    day_stuff!(25, "", "");
 
     fn part_1(_input: Self::Input) -> Option<String> {
         None

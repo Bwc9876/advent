@@ -7,7 +7,6 @@ pub mod pos;
 pub mod range;
 
 pub mod prelude {
-    pub use crate::day_utils::*;
     pub use crate::dir::*;
     pub use crate::geom;
     pub use crate::grid::cursors::*;
