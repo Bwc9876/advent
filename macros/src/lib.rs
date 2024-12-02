@@ -47,6 +47,7 @@ fn make_day_tests() -> String {
 
 fn get_solve_day() -> String {
     let inner = make_day_match("Day{day}::run_part(part, input)");
+    let inner2 = make_day_match("{Day{day}::bench_part(part, input);}");
     format!(
         "
     fn solve_day(day: usize, part: usize, input: Option<&str>) -> Option<String> {{
@@ -54,8 +55,13 @@ fn get_solve_day() -> String {
             {inner}
             _ => None,
         }}
-    }}",
-        inner = inner
+    }}
+    fn bench_day(day: usize, part: usize, input: Option<&str>) {{
+        match day {{
+            {inner2}
+            _ => panic!(\"Invalid Day\"),
+        }}
+    }}"
     )
 }
 
@@ -181,6 +187,7 @@ fn make_run_all_years(years: &[&str]) -> String {
 
 fn make_run_year(years: &[&str]) -> String {
     let inner = make_year_match(years, "Year{year}::run_dp(input.as_deref(), dp)");
+    let inner2 = make_year_match(years, "Year{year}::bench_dp(input.as_deref(), dp)");
     format!(
         "
     fn run_year(year: usize, dp: DP, input: Option<&str>) {{
@@ -190,8 +197,15 @@ fn make_run_year(years: &[&str]) -> String {
                 println!(\"Unknown year: {{year}}\");
             }}
         }}
-    }}",
-        inner = inner
+    }}
+    fn bench_year(year: usize, dp: DP, input: Option<&str>) {{
+        match year {{
+            {inner2}
+            _ => {{
+                println!(\"Unknown year: {{year}}\");
+            }}
+        }}
+    }}"
     )
 }
 

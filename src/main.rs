@@ -16,6 +16,17 @@ fn run_ydp(ydp: YDP, input: Option<String>) {
     }
 }
 
+fn bench_ydp(ydp: YDP, input: Option<String>) {
+    let dp = ydp.to_dp();
+
+    match ydp.year {
+        Selection::Single(year) => {
+            bench_year(year, dp, input.as_deref());
+        }
+        _ => panic!("Cannot Bench All Years"),
+    }
+}
+
 fn main() {
     let args = std::env::args().skip(1).collect::<Vec<_>>();
 
@@ -31,9 +42,13 @@ fn main() {
                 let (ydp, input) = get_ydp_and_input(args[1..].to_vec());
                 run_ydp(ydp, input);
             }
+            "bench" => {
+                let (ydp, input) = get_ydp_and_input(args[1..].to_vec());
+                bench_ydp(ydp, input);
+            }
             _ => {
                 println!("Unknown command: {}", command);
-                println!("Available commands: new, solve");
+                println!("Available commands: new, solve, bench");
             }
         },
         None => {

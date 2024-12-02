@@ -1,5 +1,7 @@
 use std::time::Instant;
 
+use indicatif::ProgressStyle;
+
 #[macro_export]
 macro_rules! ex_for_day {
     ($day:literal, $part:literal) => {
@@ -34,6 +36,40 @@ macro_rules! day_stuff {
     }
 }
 
+const BENCH_SECS: u64 = 5;
+const PROGRESS_TEMPLATE: &str = "{spinner} {wide_msg} [{bar:100.green/cyan}]";
+const PROGRESS_CHARS: &str = "=>-";
+
+macro_rules! bench {
+    ($t:expr) => {{
+        let outer_instant = std::time::Instant::now();
+        let mut times = Vec::<std::time::Duration>::with_capacity(1000);
+        let mut res = None;
+        let style = ProgressStyle::with_template(PROGRESS_TEMPLATE)
+            .unwrap()
+            .progress_chars(PROGRESS_CHARS);
+        let progress = indicatif::ProgressBar::new(BENCH_SECS);
+        progress.set_style(style);
+        let mut i = 0;
+        while outer_instant.elapsed().as_secs() <= BENCH_SECS {
+            let instant = std::time::Instant::now();
+            let r = $t;
+            if res.is_none() {
+                res = Some(r)
+            }
+            times.push(instant.elapsed());
+            i += 1;
+            progress.set_message(format!("{i} Runs"));
+            progress.set_position(outer_instant.elapsed().as_secs());
+        }
+        (
+            times.iter().sum::<std::time::Duration>() / (times.len() as u32),
+            times.len(),
+            res.unwrap(),
+        )
+    }};
+}
+
 /// A trait for a day of Advent of Code.
 ///
 /// This trait is implemented for each day of Advent of Code.
@@ -46,7 +82,7 @@ macro_rules! day_stuff {
 /// Then, any runner can use `run_part` to run a part of the day with a given input or the example input.
 ///
 pub trait Day {
-    type Input;
+    type Input: Clone;
 
     const DAY: usize = 0;
 
@@ -81,6 +117,31 @@ pub trait Day {
             instant.elapsed()
         );
         solution
+    }
+
+    fn bench_part(part: usize, input: Option<&str>) {
+        let input = input.unwrap_or_else(|| Self::get_example_input(part));
+        let (parse_time, sample_size, input) = bench!(Self::parse_input(input));
+        println!(
+            "Day {} Parse Func: {:?} (N = {})",
+            Self::DAY,
+            parse_time,
+            sample_size
+        );
+
+        let (part_time, sample_size, _output) = match part {
+            1 => bench!(Self::part_1(input.clone())),
+            2 => bench!(Self::part_2(input.clone())),
+            _ => panic!("Invalid Part Number"),
+        };
+
+        println!(
+            "Day {} Part {}: {:?} (N = {})",
+            Self::DAY,
+            part,
+            part_time,
+            sample_size
+        );
     }
 
     fn run_all_parts(extra_indent: &str) {
