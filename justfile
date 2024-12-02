@@ -3,7 +3,7 @@ _default:
     cargo run --release -- solve *
 
 year := `date +%Y`
-day := `date +%d`
+day := `nu -c 'date now | format date "%_d" | str trim'`
 
 p P in="":
     cargo run --release -- solve {{year}}:{{day}}:{{P}} {{in}}
