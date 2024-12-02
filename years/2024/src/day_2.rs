@@ -14,15 +14,15 @@ impl Day for Day2 {
     day_stuff!(2, "2", "4", Vec<Vec<i64>>);
 
     fn part_1(input: Self::Input) -> Option<String> {
-        Some(input.into_iter().filter(|v| line_valid(&v)).count().to_string())
+        Some(input.into_iter().filter(|v| line_valid(v)).count().to_string())
     }
 
     fn part_2(input: Self::Input) -> Option<String> {
         Some(input.into_iter().filter(|line| {
-            line_valid(&line) || 
+            line_valid(line) || 
             all_combos_remove_one(line)
             .any(|combo| {
-                let v = combo.map(|x| *x).collect::<Vec<_>>();
+                let v = combo.copied().collect::<Vec<_>>();
                 line_valid(&v)
             })
         }).count().to_string())

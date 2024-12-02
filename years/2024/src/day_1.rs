@@ -13,7 +13,7 @@ impl Day for Day1 {
         r.sort_unstable();
 
         Some(l.into_iter()
-            .zip(r.into_iter())
+            .zip(r)
             .map(|(l, r)| (l - r).abs())
             .sum::<i32>()
             .to_string()

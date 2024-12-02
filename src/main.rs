@@ -19,7 +19,7 @@ fn run_ydp(ydp: YDP, input: Option<String>) {
 fn main() {
     let args = std::env::args().skip(1).collect::<Vec<_>>();
 
-    let command = args.get(0);
+    let command = args.first();
 
     match command {
         Some(command) => match command.as_str() {

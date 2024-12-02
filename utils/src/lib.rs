@@ -8,7 +8,6 @@ pub mod pos;
 pub mod range;
 
 #[allow(unused)]
-
 pub mod prelude {
     pub use crate::dir::*;
     pub use crate::geom;

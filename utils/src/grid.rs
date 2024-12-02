@@ -706,13 +706,13 @@ pub mod cursors {
         }
     }
 
-    impl<'a, T, D: Movement> PartialEq for GridCursor<'a, T, D> {
+    impl<T, D: Movement> PartialEq for GridCursor<'_, T, D> {
         fn eq(&self, other: &Self) -> bool {
             self.pos == other.pos && self.dir == other.dir
         }
     }
 
-    impl<'a, T, D: Movement> std::hash::Hash for GridCursor<'a, T, D> {
+    impl<T, D: Movement> std::hash::Hash for GridCursor<'_, T, D> {
         fn hash<H: Hasher>(&self, state: &mut H) {
             self.pos.hash(state);
             self.dir.hash(state);
@@ -742,7 +742,7 @@ pub mod cursors {
         }
     }
 
-    impl<'a, T: std::fmt::Debug, D: Movement> std::fmt::Debug for GridCursor<'a, T, D> {
+    impl<T: std::fmt::Debug, D: Movement> std::fmt::Debug for GridCursor<'_, T, D> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("GridCursor")
                 .field("pos", &self.pos)
@@ -816,7 +816,7 @@ pub mod cursors {
         }
     }
 
-    impl<'a, T: DirectedTile<D>, D: Movement> Iterator for DirectedCursor<'a, T, D> {
+    impl<T: DirectedTile<D>, D: Movement> Iterator for DirectedCursor<'_, T, D> {
         type Item = (Position, D, T);
 
         fn next(&mut self) -> Option<Self::Item> {
@@ -905,7 +905,7 @@ pub mod cursors {
         }
     }
 
-    impl<'a, T: FillableTile> std::fmt::Debug for FloodFillCursor<'a, T> {
+    impl<T: FillableTile> std::fmt::Debug for FloodFillCursor<'_, T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("FloodFillCursor")
                 .field("visited", &self.visited)
@@ -914,7 +914,7 @@ pub mod cursors {
         }
     }
 
-    impl<'a, T: FillableTile> Iterator for FloodFillCursor<'a, T> {
+    impl<T: FillableTile> Iterator for FloodFillCursor<'_, T> {
         type Item = Position;
 
         fn next(&mut self) -> Option<Self::Item> {
