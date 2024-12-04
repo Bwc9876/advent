@@ -110,7 +110,7 @@ pub trait Day {
             _ => panic!("Invalid part number"),
         };
         println!(
-            "Day {} Part {}: {} ({:?}ms)",
+            "Day {} Part {}: {} ({:?})",
             Self::DAY,
             part,
             solution.as_ref().unwrap_or(&"Not implemented".to_string()),
@@ -158,7 +158,7 @@ pub trait Day {
                 _ => panic!("Invalid part number"),
             };
             println!(
-                "{extra_indent}  Part {}: {} ({:?}ms)",
+                "{extra_indent}  Part {}: {} ({:?})",
                 part,
                 solution.as_ref().unwrap_or(&"Not implemented".to_string()),
                 part_time.elapsed()

@@ -20,9 +20,35 @@ pub struct Position {
     pub y: CompType,
 }
 
+#[macro_export]
+macro_rules! mpos {
+    ($x:expr, $y:expr) => {
+        $crate::pos::Position::new($x, $y)
+    };
+}
+
+#[macro_export]
+macro_rules! kern {
+
+    (@builtin N) => { $crate::dir::ALL_8[0] };
+    (@builtin S) => { $crate::dir::ALL_8[1] };
+    (@builtin E) => { $crate::dir::ALL_8[2] };
+    (@builtin W) => { $crate::dir::ALL_8[3] };
+    (@builtin SE) => { $crate::dir::ALL_8[4] };
+    (@builtin NE) => { $crate::dir::ALL_8[5] };
+    (@builtin SW) => { $crate::dir::ALL_8[6] };
+    (@builtin NW) => { $crate::dir::ALL_8[7] };
+
+    (@builtin ($x:expr, $y: expr)) => { $crate::pos::pos!($x, $y) };
+
+    [$($s:tt),*] => {
+        [$(kern!(@builtin $s),)*]
+    };
+}
+
 impl Position {
     /// Create a new position
-    pub fn new(x: CompType, y: CompType) -> Self {
+    pub const fn new(x: CompType, y: CompType) -> Self {
         Self { x, y }
     }
 
@@ -768,5 +794,11 @@ impl From<Position> for (usize, usize) {
 impl From<Direction> for Position {
     fn from(dir: Direction) -> Self {
         dir.get_kernel()
+    }
+}
+
+impl Movement for Position {
+    fn get_kernel(&self) -> Position {
+        *self
     }
 }

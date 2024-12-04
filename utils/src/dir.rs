@@ -1,3 +1,5 @@
+use std::ops::Range;
+
 /// Module containing utilities related to direction and movement.
 use crate::pos::Position;
 
@@ -36,6 +38,12 @@ use crate::pos::Position;
 ///
 pub trait Movement: std::fmt::Debug + Copy + Clone + PartialEq + std::hash::Hash {
     fn get_kernel(&self) -> Position;
+
+    /// Repeat the given movement across the range `range`.
+    fn repeat(&self, range: Range<isize>) -> impl Iterator<Item = Position> {
+        let k = self.get_kernel();
+        range.map(move |i| k.multiply_comp(i))
+    }
 }
 
 /// The four cardinal directions.
@@ -144,3 +152,14 @@ impl Movement for Direction {
         }
     }
 }
+
+pub const ALL_8: [Position; 8] = [
+    Position::new(0, -1),
+    Position::new(0, 1),
+    Position::new(1, 0),
+    Position::new(-1, 0),
+    Position::new(1, 1),
+    Position::new(1, -1),
+    Position::new(-1, 1),
+    Position::new(-1, -1),
+];

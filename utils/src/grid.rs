@@ -3,6 +3,7 @@ use crate::{
     pos::Position,
 };
 
+#[derive(Clone)]
 /// A 2D integer grid of values.
 ///
 /// This grid is represented by a vector of vectors.
@@ -396,6 +397,66 @@ impl<T> Grid<T> {
     ) -> impl Iterator<Item = (M, Position, &'a T)> + 'a {
         pos.relatives(kernels)
             .filter_map(move |(pos, dir)| self.get(pos).map(|v| (dir, pos, v)))
+    }
+
+    /// Get all positions relative to the given position, returning [None] if the relatives would
+    /// go out of bounds
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use utils::prelude::*;
+    ///
+    /// let data = vec![
+    ///    vec![1, 2, 3],
+    ///    vec![4, 5, 6],
+    ///    vec![7, 8, 9],
+    /// ];
+    ///
+    /// let grid = Grid::new(data);
+    ///
+    /// let pos = Position::new(1, 1);
+    /// let kernels = &[
+    ///   Direction::North,
+    ///   Direction::East,
+    /// ];
+    ///
+    /// let mut relatives = grid.relatives_strict(pos, kernels);
+    /// if let Some(relatives) = relatives {
+    /// assert_eq!(relatives.get(0), Some((Direction::North, Position::new(1, 0), &2)).as_ref());
+    /// assert_eq!(relatives.get(1), Some((Direction::East, Position::new(2, 1), &6)).as_ref());
+    /// } else { panic!("Relatives should be Some!") }
+    /// ```
+    ///
+    /// ```
+    /// use utils::prelude::*;
+    ///
+    /// let data = vec![
+    ///   vec![1, 2, 3],
+    ///   vec![4, 5, 6],
+    ///   vec![7, 8, 9],
+    /// ];
+    ///
+    /// let grid = Grid::new(data);
+    ///
+    /// let pos = Position::new(1, 0);
+    /// let kernels = &[
+    ///  Direction::North, // This will result in [None], as (1, -1) is out of bounds
+    ///  Direction::East,
+    /// ];
+    ///
+    /// let mut relatives = grid.relatives_strict(pos, kernels);
+    ///
+    /// assert!(relatives.is_none());
+    /// ```
+    pub fn relatives_strict<M: Movement>(
+        &self,
+        pos: Position,
+        kernels: &[M],
+    ) -> Option<Vec<(M, Position, &T)>> {
+        pos.relatives(kernels)
+            .map(move |(pos, dir)| self.get(pos).map(|v| (dir, pos, v)))
+            .collect::<Option<Vec<_>>>()
     }
 
     /// Get all positions relative to the given position in the grid based off the given kernels.
