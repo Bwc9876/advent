@@ -576,7 +576,7 @@ impl<T: Eq> Grid<T> {
             .find_map(|(p, t)| if t == tile { Some(p) } else { None })
     }
 
-    pub fn cursor_at<D: Movement>(&self, tile: &T, dir: D) -> Option<GridCursor<T, D>> {
+    pub fn cursor_at_tile<D: Movement>(&self, tile: &T, dir: D) -> Option<GridCursor<T, D>> {
         self.find_tile(tile).map(|pos| self.cursor(pos, dir))
     }
 }
@@ -831,6 +831,11 @@ pub mod cursors {
         /// Create a new cursor at the given position and direction.
         pub fn new(grid: &'a Grid<T>, pos: Position, dir: D) -> Self {
             Self { grid, pos, dir }
+        }
+
+        /// Get the current state of the cursor (position and direction) for use in tracking
+        pub fn state(&self) -> (Position, D) {
+            (self.pos, self.dir)
         }
 
         /// Move the cursor forward one step in the direction it is facing.

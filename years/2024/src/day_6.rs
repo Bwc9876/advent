@@ -24,14 +24,14 @@ fn crawl_grid_with_obs(mut curs: GridCursor<Tile, Direction>, obs_pos: Position)
     let mut visited = HashSet::new();
 
     while let Some((pos, tile)) = curs.peek_forward() {
-        visited.insert((curs.pos, curs.dir));
+        visited.insert(curs.state());
         if tile.is_open() && pos != obs_pos {
             curs.move_forward();
         } else {
             curs.turn(true);
         }
 
-        if visited.contains(&(curs.pos, curs.dir)) {
+        if visited.contains(&curs.state()) {
             return true;
         }
     }
@@ -44,7 +44,7 @@ impl Day for Day6 {
 
     fn part_1(input: Self::Input) -> Option<String> {
         let mut curs = input
-            .cursor_at(&Tile::GuardStart, Direction::North)
+            .cursor_at_tile(&Tile::GuardStart, Direction::North)
             .unwrap();
 
         let mut visited = HashSet::with_capacity(input.width() * input.height());
@@ -66,7 +66,7 @@ impl Day for Day6 {
 
     fn part_2(input: Self::Input) -> Option<String> {
         let mut curs = input
-            .cursor_at(&Tile::GuardStart, Direction::North)
+            .cursor_at_tile(&Tile::GuardStart, Direction::North)
             .unwrap();
 
         let start_curs = curs;
