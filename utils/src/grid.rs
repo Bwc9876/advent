@@ -1,3 +1,5 @@
+use cursors::GridCursor;
+
 use crate::{
     dir::{Direction, Movement, CARDINALS},
     pos::Position,
@@ -339,6 +341,34 @@ impl<T> Grid<T> {
         })
     }
 
+    /// Iterate over all elements of the grid.
+    ///
+    /// This also yields the position of each element for easy access.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use utils::prelude::*;
+    ///
+    /// let data = vec![
+    ///    vec![1, 2, 3],
+    ///    vec![4, 5, 6],
+    ///    vec![7, 8, 9],
+    /// ];
+    ///
+    /// let grid = Grid::new(data);
+    ///
+    /// assert_eq!(grid.iter().map(|(_, v)| v).sum::<usize>(), 1+2+3+4+5+6+7+8+9);
+    /// ```
+    ///
+    pub fn iter_mut(&mut self) -> impl Iterator<Item = (Position, &mut T)> {
+        self.data.iter_mut().enumerate().flat_map(|(y, row)| {
+            row.iter_mut()
+                .enumerate()
+                .map(move |(x, col)| (Position::new(x as isize, y as isize), col))
+        })
+    }
+
     /// Get all positions relative to the given position in the grid based off the given kernels.
     ///
     /// This will automatically filter out any positions that are out of bounds.
@@ -531,6 +561,26 @@ impl<T> Grid<T> {
         expand: usize,
     ) -> impl Iterator<Item = ((Direction, usize), Position, &T)> {
         self.relatives_expand_by_wrapped(pos, &CARDINALS, expand)
+    }
+
+    /// Create a new cursor for this grid facing in the specified direction at the specified
+    /// position
+    pub fn cursor<D: Movement>(&self, pos: Position, dir: D) -> GridCursor<T, D> {
+        GridCursor::new(self, pos, dir)
+    }
+}
+
+impl<T> Grid<T>
+where
+    T: Eq,
+{
+    pub fn find_tile(&self, tile: &T) -> Option<Position> {
+        self.iter()
+            .find_map(|(p, t)| if t == tile { Some(p) } else { None })
+    }
+
+    pub fn cursor_at<D: Movement>(&self, tile: &T, dir: D) -> Option<GridCursor<T, D>> {
+        self.find_tile(tile).map(|pos| self.cursor(pos, dir))
     }
 }
 
@@ -742,8 +792,8 @@ pub mod cursors {
     ///
     pub struct GridCursor<'a, T, D: Movement> {
         grid: &'a Grid<T>,
-        pos: Position,
-        dir: D,
+        pub pos: Position,
+        pub dir: D,
     }
 
     impl<'a, T> GridCursor<'a, T, Direction> {
@@ -789,6 +839,11 @@ pub mod cursors {
         /// Move the cursor forward one step in the direction it is facing.
         pub fn move_forward(&mut self) {
             self.pos = self.pos.move_dir(self.dir);
+        }
+
+        pub fn peek_forward(&self) -> Option<(Position, &T)> {
+            let next_pos = self.pos.move_dir(self.dir);
+            self.grid.get(next_pos).map(|value| (next_pos, value))
         }
 
         /// Get the value at the current position of the cursor.
