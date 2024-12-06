@@ -21,9 +21,16 @@ pub struct Position {
 }
 
 #[macro_export]
-macro_rules! mpos {
+macro_rules! ipos {
     ($x:expr, $y:expr) => {
         $crate::pos::Position::new($x, $y)
+    };
+}
+
+#[macro_export]
+macro_rules! upos {
+    ($x:expr, $y:expr) => {
+        $crate::pos::ipos!($x as isize, $y as isize)
     };
 }
 
@@ -39,7 +46,7 @@ macro_rules! kern {
     (@builtin SW) => { $crate::dir::ALL_8[6] };
     (@builtin NW) => { $crate::dir::ALL_8[7] };
 
-    (@builtin ($x:expr, $y: expr)) => { $crate::pos::pos!($x, $y) };
+    (@builtin ($x:expr, $y: expr)) => { $crate::pos::upos!($x, $y) };
 
     [$($s:tt),*] => {
         [$(kern!(@builtin $s),)*]
