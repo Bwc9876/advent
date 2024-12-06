@@ -570,10 +570,7 @@ impl<T> Grid<T> {
     }
 }
 
-impl<T> Grid<T>
-where
-    T: Eq,
-{
+impl<T: Eq> Grid<T> {
     pub fn find_tile(&self, tile: &T) -> Option<Position> {
         self.iter()
             .find_map(|(p, t)| if t == tile { Some(p) } else { None })
@@ -841,6 +838,7 @@ pub mod cursors {
             self.pos = self.pos.move_dir(self.dir);
         }
 
+        /// See what tile (if any) the cursor will go to if it would move forward
         pub fn peek_forward(&self) -> Option<(Position, &T)> {
             let next_pos = self.pos.move_dir(self.dir);
             self.grid.get(next_pos).map(|value| (next_pos, value))
