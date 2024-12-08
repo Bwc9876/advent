@@ -30,7 +30,7 @@ macro_rules! ipos {
 #[macro_export]
 macro_rules! upos {
     ($x:expr, $y:expr) => {
-        $crate::pos::ipos!($x as isize, $y as isize)
+        $crate::ipos!($x as isize, $y as isize)
     };
 }
 
@@ -60,7 +60,7 @@ impl Position {
     }
 
     /// Create a new position at 0, 0
-    pub fn zero() -> Self {
+    pub const fn zero() -> Self {
         Self { x: 0, y: 0 }
     }
 

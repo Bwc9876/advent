@@ -125,6 +125,11 @@ impl<T> Grid<T> {
         (self.width() - 1, self.height() - 1)
     }
 
+    /// Get if a given position is in this grid's bounds
+    pub fn in_bounds(&self, pos: &Position) -> bool {
+        pos.x >= 0 && pos.y >= 0 && pos.x < self.width() as isize && pos.y < self.height() as isize
+    }
+
     /// Get a value from the grid at the given position.
     ///
     /// # Examples
