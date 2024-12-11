@@ -1,111 +1,58 @@
 use std::collections::HashMap;
 
 use advent_core::{day_stuff, ex_for_day, Day};
+use utils::num::{num_digits, split_num_once};
 
 pub struct Day11;
 
-impl Day for Day11 {
-    day_stuff!(11, "55312", "65601038650482", Vec<u128>);
+fn do_blinks(stones: Vec<usize>, blinks: usize) -> usize {
+    let l = stones.len();
+    let mut stone_map = stones
+        .into_iter()
+        .fold(HashMap::with_capacity(l), |mut acc, stone| {
+            acc.entry(stone).and_modify(|c| *c += 1).or_insert(1);
+            acc
+        });
 
-    fn part_1(input: Self::Input) -> Option<String> {
-        let l = input.len();
-        let mut stone_map = input
-            .into_iter()
-            .fold(HashMap::with_capacity(l), |mut acc, stone| {
-                acc.entry(stone).and_modify(|c| *c += 1).or_insert(1);
-                acc
-            });
+    for _i in 0..blinks {
+        let mut new_map = HashMap::with_capacity(stone_map.len() * 2);
 
-        for _i in 0..25 {
-            let mut new_map = HashMap::with_capacity(stone_map.len());
-
-            for (num, count) in stone_map {
-                if num == 0 {
-                    new_map
-                        .entry(1)
-                        .and_modify(|c| *c += count)
-                        .or_insert(count);
+        for (num, count) in stone_map {
+            if num == 0 {
+                *new_map.entry(1).or_insert(0) += count;
+            } else {
+                if num_digits(num) % 2 == 0 {
+                    let (left, right) = split_num_once(num);
+                    *new_map.entry(left).or_insert(0) += count;
+                    *new_map.entry(right).or_insert(0) += count;
                 } else {
-                    let ss = num.to_string();
-                    let l = ss.len();
-                    if l % 2 == 0 {
-                        let (num1, num2) =
-                            (ss[..l / 2].parse().unwrap(), ss[l / 2..].parse().unwrap());
-                        new_map
-                            .entry(num1)
-                            .and_modify(|c| *c += count)
-                            .or_insert(count);
-                        new_map
-                            .entry(num2)
-                            .and_modify(|c| *c += count)
-                            .or_insert(count);
-                    } else {
-                        new_map
-                            .entry(num * 2024)
-                            .and_modify(|c| *c += count)
-                            .or_insert(count);
-                    }
+                    *new_map.entry(num * 2024).or_insert(0) += count;
                 }
             }
-
-            stone_map = new_map;
         }
 
-        Some(stone_map.values().sum::<u128>().to_string())
+        stone_map = new_map;
+    }
+
+    stone_map.into_values().sum::<usize>()
+}
+
+impl Day for Day11 {
+    day_stuff!(11, "55312", "65601038650482", Vec<usize>);
+
+    fn part_1(input: Self::Input) -> Option<String> {
+        Some(do_blinks(input, 25).to_string())
     }
 
     fn part_2(input: Self::Input) -> Option<String> {
-        let l = input.len();
-        let mut stone_map = input
-            .into_iter()
-            .fold(HashMap::with_capacity(l), |mut acc, stone| {
-                acc.entry(stone).and_modify(|c| *c += 1).or_insert(1);
-                acc
-            });
-
-        for _i in 0..75 {
-            let mut new_map = HashMap::with_capacity(stone_map.len());
-
-            for (num, count) in stone_map {
-                if num == 0 {
-                    new_map
-                        .entry(1)
-                        .and_modify(|c| *c += count)
-                        .or_insert(count);
-                } else {
-                    let ss = num.to_string();
-                    let l = ss.len();
-                    if l % 2 == 0 {
-                        let (num1, num2) =
-                            (ss[..l / 2].parse().unwrap(), ss[l / 2..].parse().unwrap());
-                        new_map
-                            .entry(num1)
-                            .and_modify(|c| *c += count)
-                            .or_insert(count);
-                        new_map
-                            .entry(num2)
-                            .and_modify(|c| *c += count)
-                            .or_insert(count);
-                    } else {
-                        new_map
-                            .entry(num * 2024)
-                            .and_modify(|c| *c += count)
-                            .or_insert(count);
-                    }
-                }
-            }
-
-            stone_map = new_map;
-        }
-
-        Some(stone_map.values().sum::<u128>().to_string())
+        Some(do_blinks(input, 75).to_string())
     }
 
     fn parse_input(input: &str) -> Self::Input {
         input
             .trim()
             .split(" ")
-            .map(|n| n.parse::<u128>().unwrap())
+            .map(|n| n.parse::<usize>().unwrap())
             .collect()
     }
 }
