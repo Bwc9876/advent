@@ -434,6 +434,15 @@ impl<T> Grid<T> {
             .filter_map(move |(pos, dir)| self.get(pos).map(|v| (dir, pos, v)))
     }
 
+    pub fn relatives_valid<'a, M: Movement>(
+        &'a self,
+        pos: Position,
+        kernels: &'a [M],
+    ) -> impl Iterator<Item = (M, Option<(Position, &'a T)>)> + 'a {
+        pos.relatives(kernels)
+            .map(move |(pos, dir)| (dir, self.get(pos).map(|v| (pos, v))))
+    }
+
     /// Get all positions relative to the given position, returning [None] if the relatives would
     /// go out of bounds
     ///

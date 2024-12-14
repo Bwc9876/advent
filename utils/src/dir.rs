@@ -127,6 +127,10 @@ impl Direction {
             (Self::West, false) => Self::South,
         }
     }
+
+    pub fn is_horizontal(&self) -> bool {
+        matches!(self, Direction::East | Direction::West)
+    }
 }
 
 impl From<Position> for Direction {

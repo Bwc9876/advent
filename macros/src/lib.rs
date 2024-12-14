@@ -6,7 +6,7 @@ use proc_macro::TokenStream;
 
 fn make_day_mods() -> String {
     (1..=MAX_DAY)
-        .map(|day| format!("mod day_{day};", day = day))
+        .map(|day| format!("pub mod day_{day};", day = day))
         .collect::<Vec<_>>()
         .join("\n")
 }

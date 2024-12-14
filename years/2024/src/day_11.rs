@@ -5,12 +5,12 @@ use utils::num::{num_digits, split_num_once};
 
 pub struct Day11;
 
-fn do_blinks(stones: Vec<usize>, blinks: usize) -> usize {
+pub fn do_blinks(stones: Vec<usize>, blinks: usize) -> usize {
     let l = stones.len();
     let mut stone_map = stones
         .into_iter()
         .fold(HashMap::with_capacity(l), |mut acc, stone| {
-            acc.entry(stone).and_modify(|c| *c += 1).or_insert(1);
+            *acc.entry(stone).or_insert(0) += 1;
             acc
         });
 

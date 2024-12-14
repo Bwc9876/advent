@@ -1,3 +1,7 @@
 target
 scratch/
 result
+
+# For 2024 Day 14 - I am in hell
+trees*.txt
+
