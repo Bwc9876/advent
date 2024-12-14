@@ -49,7 +49,7 @@ impl Day for Day14 {
                 acc
             });
 
-        Some((dbg!(ur) * dbg!(ul) * dbg!(ll) * dbg!(lr)).to_string())
+        Some((ur * ul * ll * lr).to_string())
     }
 
     fn part_2(input: Self::Input) -> Option<String> {
@@ -84,7 +84,7 @@ impl Day for Day14 {
             }
         }
 
-        Some("FUCK".to_string())
+        panic!("No Tree Womp Womp")
     }
 
     fn parse_input(input: &str) -> Self::Input {
