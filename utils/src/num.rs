@@ -29,7 +29,7 @@ pub fn num_digits(num: usize) -> usize {
 /// Split a given number at a specific digit, this digit will be included in the right-hand side
 /// and excluded in the left.
 ///
-/// If the split is invalid, zero may be returnd on either side of the result.
+/// If the split is invalid, zero may be returned on either side of the result.
 ///
 /// # Examples
 ///

@@ -4,4 +4,8 @@ result
 
 # For 2024 Day 14 - I am in hell
 trees*.txt
+mem.mem
+
+# Nice one rustc
+rustc-ice*
 

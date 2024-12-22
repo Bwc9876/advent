@@ -2,36 +2,30 @@ use std::{cmp::Ordering, collections::HashSet};
 
 use advent_core::{day_stuff, ex_for_day, Day};
 use regex::Regex;
-use utils::{ipos, pos::Position};
+use utils::{pos::Position, upos};
 
 pub struct Day14;
 
-fn robot_go(pos: Position, vel: Position, times: isize, bounds: Position) -> Position {
-    let new_pos = pos.add(&vel.multiply_comp(times));
-    let x_r = new_pos.x % bounds.x;
-    let y_r = new_pos.y % bounds.y;
-    ipos!(
-        if x_r < 0 { x_r + bounds.x } else { x_r },
-        if y_r < 0 { y_r + bounds.y } else { y_r }
-    )
+fn robot_go(pos: Position, vel: Position, times: isize, bounds: (usize, usize)) -> Position {
+    pos.add(&vel.multiply_comp(times)).bind(bounds).into()
 }
 
 impl Day for Day14 {
     day_stuff!(14, "", "", Vec<(Position, Position)>);
 
     fn part_1(input: Self::Input) -> Option<String> {
-        let bounds = Position::new(101, 103);
+        let bounds = (101, 103);
         let times = 100;
         let (ur, ul, ll, lr) = input
             .into_iter()
             .map(move |(pos, vel)| robot_go(pos, vel, times, bounds))
             .fold((0, 0, 0, 0), move |mut acc, robo| {
-                let is_upper = match robo.y.cmp(&(bounds.y / 2)) {
+                let is_upper = match robo.y.cmp(&(bounds.1 as isize / 2)) {
                     Ordering::Equal => None,
                     Ordering::Greater => Some(false),
                     Ordering::Less => Some(true),
                 };
-                let is_left = match robo.x.cmp(&(bounds.x / 2)) {
+                let is_left = match robo.x.cmp(&(bounds.0 as isize / 2)) {
                     Ordering::Equal => None,
                     Ordering::Greater => Some(false),
                     Ordering::Less => Some(true),
@@ -53,7 +47,7 @@ impl Day for Day14 {
     }
 
     fn part_2(input: Self::Input) -> Option<String> {
-        let bounds = Position::new(101, 103);
+        let bounds = (101, 103);
 
         let re = Regex::new(include_str!("da_tree.txt")).unwrap();
 
@@ -63,12 +57,12 @@ impl Day for Day14 {
                 .map(move |r| robot_go(r.0, r.1, i as isize, bounds))
                 .collect::<HashSet<_>>();
 
-            let hay = (0..bounds.y)
+            let hay = (0..bounds.1)
                 .flat_map(|y| {
                     let bots = &bots;
-                    (0..bounds.x)
+                    (0..bounds.0)
                         .map(move |x| {
-                            let pos = Position::new(x, y);
+                            let pos = upos!(x, y);
                             if bots.contains(&pos) {
                                 'X'
                             } else {

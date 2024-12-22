@@ -7,5 +7,6 @@ edition = "2021"
 [dependencies]
 advent_core = { path = "../../advent_core" }
 macros = { path = "../../macros" }
+rayon = "1.10.0"
 regex = "1.11.1"
 utils = { path = "../../utils" }
