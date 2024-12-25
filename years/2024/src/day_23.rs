@@ -56,7 +56,7 @@ fn represent<'a>(
 }
 
 impl Day for Day23 {
-    day_stuff!(23, "", "", Edges);
+    day_stuff!(23, "7", "co,de,ka,ta", Edges);
 
     fn part_1(input: Self::Input) -> Option<String> {
         let groups = input

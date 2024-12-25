@@ -41,7 +41,7 @@ impl PartialOrd for DState {
 }
 
 impl Day for Day16 {
-    day_stuff!(16, "", "", Grid);
+    day_stuff!(16, "11048", "64", Grid);
 
     fn part_1(input: Self::Input) -> Option<String> {
         let start_pos = input.find_tile(&Tile::Start).unwrap();

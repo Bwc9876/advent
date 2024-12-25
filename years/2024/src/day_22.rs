@@ -43,7 +43,7 @@ fn get_all_four_unique_changes(init: usize, times: usize) -> HashMap<[isize; 4],
 }
 
 impl Day for Day22 {
-    day_stuff!(22, "", "", Vec<usize>);
+    day_stuff!(22, "37327623", "23", Vec<usize>);
 
     fn part_1(input: Self::Input) -> Option<String> {
         let ans = input

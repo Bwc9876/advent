@@ -143,7 +143,7 @@ impl Computer {
 }
 
 impl Day for Day17 {
-    day_stuff!(17, "", "", Computer);
+    day_stuff!(17, "4,6,3,5,6,3,5,2,1,0", "117440", Computer);
 
     fn part_1(mut input: Self::Input) -> Option<String> {
         let mut ip = 0;

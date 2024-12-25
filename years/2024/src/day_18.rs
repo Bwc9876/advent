@@ -4,7 +4,7 @@ use std::{
 };
 
 use advent_core::{day_stuff, ex_for_day, Day};
-use utils::{ipos, pos::Position, upos};
+use utils::{pos::Position, upos};
 
 pub struct Day18;
 
@@ -28,11 +28,11 @@ impl PartialOrd for DState {
 }
 
 impl Day for Day18 {
-    day_stuff!(18, "", "", Vec<Position>);
+    day_stuff!(18, "22", "6,1", ((usize, usize), usize, Vec<Position>));
 
-    fn part_1(input: Self::Input) -> Option<String> {
+    fn part_1((bounds, fallen, input): Self::Input) -> Option<String> {
         let start_pos = Position::zero();
-        let end_pos = ipos!(70, 70);
+        let end_pos = upos!(bounds.0 - 1, bounds.1 - 1);
 
         let mut queue = BinaryHeap::new();
 
@@ -54,8 +54,8 @@ impl Day for Day18 {
             }
 
             for (next_pos, _dir) in pos
-                .adjacents_checked((71, 71))
-                .filter(|(p, _)| input.iter().take(1024).all(|op| op != p))
+                .adjacents_checked(bounds)
+                .filter(|(p, _)| input.iter().take(fallen).all(|op| op != p))
             {
                 let next_state = DState {
                     cost: cost + 1,
@@ -72,11 +72,10 @@ impl Day for Day18 {
         panic!("No Path")
     }
 
-    fn part_2(input: Self::Input) -> Option<String> {
+    fn part_2((bounds, _, input): Self::Input) -> Option<String> {
         for i in 0..input.len() {
-            println!("Byte {} of {}", i + 1, input.len());
             let start_pos = Position::zero();
-            let end_pos = ipos!(70, 70);
+            let end_pos = upos!(bounds.0 - 1, bounds.1 - 1);
 
             let mut queue = BinaryHeap::new();
 
@@ -100,7 +99,7 @@ impl Day for Day18 {
                 }
 
                 for (next_pos, _dir) in pos
-                    .adjacents_checked((71, 71))
+                    .adjacents_checked(bounds)
                     .filter(|(p, _)| input.iter().take(i + 1).all(|op| op != p))
                 {
                     let next_state = DState {
@@ -115,20 +114,27 @@ impl Day for Day18 {
                 }
             }
             if !flag {
-                return Some(input[i].to_string());
+                return Some(format!("{},{}", input[i].x, input[i].y));
             }
         }
-        None
+        panic!("All paths are possible!")
     }
 
     fn parse_input(input: &str) -> Self::Input {
-        input
-            .trim()
+        let (bounds, rest) = input.trim().split_once("\n\n").unwrap();
+
+        let mut extra = bounds.split(',').map(|s| s.parse::<usize>().unwrap());
+        let bounds = (extra.next().unwrap(), extra.next().unwrap());
+        let fallen = extra.next().unwrap();
+
+        let input = rest
             .lines()
             .map(|l| {
                 let (x, y) = l.split_once(',').unwrap();
                 upos!(x.parse::<usize>().unwrap(), y.parse::<usize>().unwrap())
             })
-            .collect()
+            .collect();
+
+        (bounds, fallen, input)
     }
 }

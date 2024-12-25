@@ -106,7 +106,7 @@ fn recur_find(
 }
 
 impl Day for Day21 {
-    day_stuff!(21, "", "", Vec<(usize, Vec<char>)>);
+    day_stuff!(21, "126384", "154115708116294", Vec<(usize, Vec<char>)>);
 
     fn part_1(input: Self::Input) -> Option<String> {
         let (num_grid, dir_grid) = pad_grids();

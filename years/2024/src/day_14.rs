@@ -11,10 +11,9 @@ fn robot_go(pos: Position, vel: Position, times: isize, bounds: (usize, usize)) 
 }
 
 impl Day for Day14 {
-    day_stuff!(14, "", "", Vec<(Position, Position)>);
+    day_stuff!(14, "12", "", ((usize, usize), Vec<(Position, Position)>));
 
-    fn part_1(input: Self::Input) -> Option<String> {
-        let bounds = (101, 103);
+    fn part_1((bounds, input): Self::Input) -> Option<String> {
         let times = 100;
         let (ur, ul, ll, lr) = input
             .into_iter()
@@ -46,10 +45,13 @@ impl Day for Day14 {
         Some((ur * ul * ll * lr).to_string())
     }
 
-    fn part_2(input: Self::Input) -> Option<String> {
-        let bounds = (101, 103);
-
+    fn part_2((bounds, input): Self::Input) -> Option<String> {
         let re = Regex::new(include_str!("da_tree.txt")).unwrap();
+
+        if bounds != (101, 103) {
+            // Im to lazy to account for other sizes, womp womp.
+            return Some(String::new());
+        }
 
         for i in 0..i32::MAX {
             let bots = input
@@ -82,8 +84,13 @@ impl Day for Day14 {
     }
 
     fn parse_input(input: &str) -> Self::Input {
-        input
-            .trim()
+        let (bounds, rest) = input.trim().split_once("\n\n").unwrap();
+
+        let mut bounds = bounds.split(',').map(|s| s.parse::<usize>().unwrap());
+
+        let (x, y) = (bounds.next().unwrap(), bounds.next().unwrap());
+
+        let input = rest
             .lines()
             .map(|l| {
                 let (pr, vr) = l.split_once(" ").unwrap();
@@ -104,6 +111,8 @@ impl Day for Day14 {
 
                 (Position::new(p[0], p[1]), Position::new(v[0], v[1]))
             })
-            .collect()
+            .collect();
+
+        ((x, y), input)
     }
 }

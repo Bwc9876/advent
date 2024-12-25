@@ -111,13 +111,39 @@ fn gps(pos_map: &PosMap) -> usize {
         .sum()
 }
 
+type Input = (Position, PosMap, Vec<Direction>);
+
+fn actual_parse(input: &str) -> Input {
+    let (map, dirs) = input.trim().split_once("\n\n").unwrap();
+    let dirs = dirs
+        .split('\n')
+        .flat_map(|l| l.chars().map(parse_instruction))
+        .collect();
+
+    let grid = Grid::<Tile>::parse(map);
+
+    let robo = grid.find_tile(&Tile::Robot).unwrap();
+
+    let pos_map = grid.iter().map(|(pos, tile)| (pos, *tile)).collect();
+
+    (robo, pos_map, dirs)
+}
+
+fn actual_parse_part_2(input: &str) -> Input {
+    let replace = input.replace('#', "##");
+    let replace = replace.replace('.', "..");
+    let replace = replace.replace('O', "[]");
+    let replace = replace.replace('@', "@.");
+    actual_parse(&replace)
+}
+
 impl Day for Day15 {
-    day_stuff!(15, "", "", (Position, PosMap, Vec<Direction>));
+    day_stuff!(15, "10092", "9021");
 
     fn part_1(input: Self::Input) -> Option<String> {
-        let (mut robo, mut pos_map, ins) = input;
+        let (mut robo, mut pos_map, ins) = actual_parse(&input);
         for i in ins {
-            if let Some(new_pos) = movement(robo, i, dbg!(&mut pos_map)) {
+            if let Some(new_pos) = movement(robo, i, &mut pos_map) {
                 robo = new_pos;
             }
         }
@@ -125,35 +151,12 @@ impl Day for Day15 {
     }
 
     fn part_2(input: Self::Input) -> Option<String> {
-        let (mut robo, mut pos_map, ins) = input;
+        let (mut robo, mut pos_map, ins) = actual_parse_part_2(&input);
         for i in ins {
             if let Some(new_pos) = movement_pt_2(robo, i, &mut pos_map) {
-                println!("Move success");
                 robo = new_pos;
             }
         }
         Some(gps(&pos_map).to_string())
-    }
-
-    fn parse_input(input: &str) -> Self::Input {
-        // TODO: Temp for pt 2
-        let replace = input.replace('#', "##");
-        let replace = replace.replace('.', "..");
-        let replace = replace.replace('O', "[]");
-        let replace = replace.replace('@', "@.");
-        println!("{}", &replace);
-        let (map, dirs) = &replace.trim().split_once("\n\n").unwrap();
-        let dirs = dirs
-            .split('\n')
-            .flat_map(|l| l.chars().map(parse_instruction))
-            .collect();
-
-        let grid = Grid::<Tile>::parse(map);
-
-        let robo = grid.find_tile(&Tile::Robot).unwrap();
-
-        let pos_map = grid.iter().map(|(pos, tile)| (pos, *tile)).collect();
-
-        (robo, pos_map, dirs)
     }
 }

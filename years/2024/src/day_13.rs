@@ -74,7 +74,7 @@ impl Machine {
 }
 
 impl Day for Day13 {
-    day_stuff!(13, "", "", Vec<Machine>);
+    day_stuff!(13, "480", "875318608908", Vec<Machine>);
 
     fn part_1(input: Self::Input) -> Option<String> {
         Some(

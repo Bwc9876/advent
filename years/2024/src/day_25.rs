@@ -13,7 +13,7 @@ tiles!(Tile, [
 type Grid = utils::grid::Grid<Tile>;
 
 impl Day for Day25 {
-    day_stuff!(25, "", "", (HashSet<[u8; 5]>, HashSet<[u8; 5]>));
+    day_stuff!(25, "3", "🥳", (HashSet<[u8; 5]>, HashSet<[u8; 5]>));
 
     fn part_1((locks, keys): Self::Input) -> Option<String> {
         let ans = locks

@@ -86,7 +86,6 @@ impl Day for Day12 {
                     flood = next;
                 }
 
-                println!("{c} @ {pos}: area = {area}; perim = {perim};");
                 total += area * perim;
 
                 visited.insert(pos);
@@ -154,16 +153,6 @@ impl Day for Day12 {
             }
         }
 
-        let _ = shapes
-            .iter()
-            .inspect(|(a, s, p)| {
-                println!(
-                    "{:?}: {a}; {s}",
-                    input.get(*p.iter().next().unwrap()).unwrap()
-                )
-            })
-            .collect::<Vec<_>>();
-
         Some(
             shapes
                 .into_iter()
@@ -173,7 +162,7 @@ impl Day for Day12 {
         )
     }
 
-    day_stuff!(12, "", "", Grid);
+    day_stuff!(12, "1930", "1206", Grid);
 
     fn parse_input(input: &str) -> Self::Input {
         Grid::parse(input.trim())

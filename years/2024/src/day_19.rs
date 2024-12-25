@@ -5,7 +5,7 @@ use std::collections::{HashMap, HashSet};
 pub struct Day19;
 
 impl Day for Day19 {
-    day_stuff!(19, "", "", (HashSet<String>, Vec<String>));
+    day_stuff!(19, "6", "16", (HashSet<String>, Vec<String>));
 
     fn part_1(input: Self::Input) -> Option<String> {
         let (avail, desire) = input;

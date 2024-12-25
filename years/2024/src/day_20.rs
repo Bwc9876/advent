@@ -15,7 +15,8 @@ tiles!(Tile, [
 type Grid = utils::grid::Grid<Tile>;
 
 impl Day for Day20 {
-    day_stuff!(20, "", "", Grid);
+    // Technically it's correct :)
+    day_stuff!(20, "0", "0", Grid);
 
     fn part_1(input: Self::Input) -> Option<String> {
         let end_pos = input.find_tile(&Tile::End).unwrap();
@@ -49,8 +50,6 @@ impl Day for Day20 {
         }
 
         let ans = cheat_set.values().filter(|c| **c >= 100).count();
-
-        dbg!(cheat_set.len());
 
         Some(ans.to_string())
     }
@@ -87,8 +86,6 @@ impl Day for Day20 {
         }
 
         let ans = cheat_set.values().filter(|c| **c >= 100).count();
-
-        dbg!(cheat_set.len());
 
         Some(ans.to_string())
     }

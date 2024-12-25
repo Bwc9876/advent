@@ -203,7 +203,7 @@ fn swap_outputs(gates: &mut Gates, out1: &String, out2: &String) {
 // z16,tdv,hnd,z09,z23,bks,nrn,tjp
 
 impl Day for Day24 {
-    day_stuff!(24, "", "", (Wires, Gates));
+    day_stuff!(24, "4", "bks,hnd,nrn,tdv,tjp,z09,z16,z23", (Wires, Gates));
 
     fn part_1((mut wires, gates): Self::Input) -> Option<String> {
         let mut all_zs = gates
@@ -212,6 +212,7 @@ impl Day for Day24 {
             .map(|g| &g.target)
             .collect::<Vec<_>>();
         all_zs.sort();
+        all_zs.dedup();
 
         let mut current_zs = HashSet::<&String>::with_capacity(all_zs.len());
 
