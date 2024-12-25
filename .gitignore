@@ -8,4 +8,5 @@ mem.mem
 
 # Nice one rustc
 rustc-ice*
+*.dot
 
