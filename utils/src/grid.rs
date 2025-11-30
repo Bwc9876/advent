@@ -579,7 +579,7 @@ impl<T> Grid<T> {
 
     /// Create a new cursor for this grid facing in the specified direction at the specified
     /// position
-    pub fn cursor<D: Movement>(&self, pos: Position, dir: D) -> GridCursor<T, D> {
+    pub fn cursor<D: Movement>(&self, pos: Position, dir: D) -> GridCursor<'_, T, D> {
         GridCursor::new(self, pos, dir)
     }
 }
@@ -590,7 +590,7 @@ impl<T: Eq> Grid<T> {
             .find_map(|(p, t)| if t == tile { Some(p) } else { None })
     }
 
-    pub fn cursor_at_tile<D: Movement>(&self, tile: &T, dir: D) -> Option<GridCursor<T, D>> {
+    pub fn cursor_at_tile<D: Movement>(&self, tile: &T, dir: D) -> Option<GridCursor<'_, T, D>> {
         self.find_tile(tile).map(|pos| self.cursor(pos, dir))
     }
 }

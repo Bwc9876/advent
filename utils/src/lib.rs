@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 pub mod day_utils;
 pub mod dir;
 pub mod geom;

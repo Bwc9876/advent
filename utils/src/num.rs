@@ -47,6 +47,43 @@ pub fn split_num_at(num: usize, idx: u32) -> (usize, usize) {
     (num / div, num % div)
 }
 
+/// Get the digit at the (starting from the right) given index
+pub fn digit_at(num: usize, idx: usize) -> usize {
+    let div = 10_usize.pow(idx as u32);
+    num / div % 10
+}
+
+/// Iterator (from right to left)
+struct Digits {
+    num: usize,
+    size: usize,
+    curr_digit: usize,
+}
+
+impl Digits {
+    pub fn new(num: usize) -> Self {
+        Self {
+            num,
+            size: num_digits(num),
+            curr_digit: 0,
+        }
+    }
+}
+
+impl Iterator for Digits {
+    type Item = usize;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.curr_digit == self.size - 1 {
+            None
+        } else {
+            let res = Some(digit_at(self.num, self.curr_digit));
+            self.curr_digit += 1;
+            res
+        }
+    }
+}
+
 /// Split the given number once in the middle, see [[split_num_at]] for caveats.
 ///
 /// # Examples
