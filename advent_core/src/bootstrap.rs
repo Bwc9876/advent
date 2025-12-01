@@ -39,7 +39,7 @@ const CARGO_TEMPLATE: &str = "
 [package]
 name = \"y_{year}\"
 version = \"0.1.0\"
-edition = \"2021\"
+edition = \"2024\"
 
 [dependencies]
 advent_core = { path = \"../../advent_core\" }

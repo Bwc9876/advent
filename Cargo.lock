@@ -9,6 +9,7 @@ dependencies = [
  "advent_core",
  "macros",
  "y_2024",
+ "y_2025",
 ]
 
 [[package]]
@@ -328,5 +329,14 @@ dependencies = [
  "macros",
  "rayon",
  "regex",
+ "utils",
+]
+
+[[package]]
+name = "y_2025"
+version = "0.1.0"
+dependencies = [
+ "advent_core",
+ "macros",
  "utils",
 ]

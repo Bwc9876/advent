@@ -6,16 +6,16 @@ year := `date +%Y`
 day := `nu -c 'date now | format date "%_d" | str trim'`
 
 # Run a specific part of today's problem
-p P in="":
-    cargo run --release -- solve {{year}}:{{day}}:{{P}} {{in}}
+p P in="" ARGS="":
+    cargo run {{ARGS}} -- solve {{year}}:{{day}}:{{P}} {{in}}
 
 # Run a specific day and part of this year
-dp DP in="":
-    cargo run --release -- solve {{year}}:{{DP}} {{in}}
+dp DP in="" ARGS="":
+    cargo run {{ARGS}} -- solve {{year}}:{{DP}} {{in}}
 
 # Run a specific year's day's part
-dyp DYP in="":
-    cargo run --release -- solve {{DYP}} {{in}}
+dyp DYP in="" ARGS="":
+    cargo run {{ARGS}} -- solve {{DYP}} {{in}}
 
 # Create a new year crate
 prep:
@@ -29,6 +29,6 @@ test:
 test-all:
     cargo test -p y_{{year}} --release
 
-# Open VSCodium to today's file
+# Open Editor to today's file
 start:
-    codium . --goto years/{{year}}/src/day_{{day}}.rs
+    nvim years/{{year}}/src/day_{{day}}.rs

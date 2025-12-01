@@ -1,0 +1,10 @@
+
+[package]
+name = "y_2025"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+advent_core = { path = "../../advent_core" }
+macros = { path = "../../macros" }
+utils = { path = "../../utils" }

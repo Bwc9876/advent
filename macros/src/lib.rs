@@ -1,32 +1,30 @@
 extern crate proc_macro;
 
-use advent_core::MAX_DAY;
-
 use proc_macro::TokenStream;
 
-fn make_day_mods() -> String {
-    (1..=MAX_DAY)
+fn make_day_mods(days: usize) -> String {
+    (1..=days)
         .map(|day| format!("pub mod day_{day};", day = day))
         .collect::<Vec<_>>()
         .join("\n")
 }
 
-fn make_use_days() -> String {
-    (1..=MAX_DAY)
+fn make_use_days(days: usize) -> String {
+    (1..=days)
         .map(|day| format!("use day_{day}::Day{day};", day = day))
         .collect::<Vec<_>>()
         .join("\n")
 }
 
-fn make_day_match(inner: &str) -> String {
-    (1..=MAX_DAY)
+fn make_day_match(inner: &str, days: usize) -> String {
+    (1..=days)
         .map(|day| format!("{day} => {},", inner.replace("{day}", &day.to_string())))
         .collect::<Vec<_>>()
         .join("\n")
 }
 
-fn make_day_tests() -> String {
-    (1..=MAX_DAY)
+fn make_day_tests(days: usize) -> String {
+    (1..=days)
         .map(|day| {
             format!(
                 "
@@ -45,9 +43,9 @@ fn make_day_tests() -> String {
         .join("\n")
 }
 
-fn get_solve_day() -> String {
-    let inner = make_day_match("Day{day}::run_part(part, input)");
-    let inner2 = make_day_match("{Day{day}::bench_part(part, input);}");
+fn get_solve_day(days: usize) -> String {
+    let inner = make_day_match("Day{day}::run_part(part, input)", days);
+    let inner2 = make_day_match("{Day{day}::bench_part(part, input);}", days);
     format!(
         "
     fn solve_day(day: usize, part: usize, input: Option<&str>) -> Option<String> {{
@@ -65,8 +63,8 @@ fn get_solve_day() -> String {
     )
 }
 
-fn get_solve_day_both_parts() -> String {
-    let inner = make_day_match("Day{day}::run_all_parts(extra_indent)");
+fn get_solve_day_both_parts(days: usize) -> String {
+    let inner = make_day_match("Day{day}::run_all_parts(extra_indent)", days);
     format!(
         "
     fn solve_day_both_parts(day: usize, extra_indent: &str) {{
@@ -79,7 +77,7 @@ fn get_solve_day_both_parts() -> String {
     )
 }
 
-fn make_year_struct(year: &str) -> String {
+fn make_year_struct(year: &str, days: usize) -> String {
     format!(
         "
         pub struct Year{year};
@@ -91,12 +89,12 @@ fn make_year_struct(year: &str) -> String {
 
             {solve_day_both_parts}
         }}",
-        solve_day = get_solve_day(),
-        solve_day_both_parts = get_solve_day_both_parts()
+        solve_day = get_solve_day(days),
+        solve_day_both_parts = get_solve_day_both_parts(days)
     )
 }
 
-fn make_tests() -> String {
+fn make_tests(days: usize) -> String {
     format!(
         "
     #[cfg(test)]
@@ -106,7 +104,7 @@ fn make_tests() -> String {
 
         {day_tests}
     }}",
-        day_tests = make_day_tests()
+        day_tests = make_day_tests(days)
     )
 }
 
@@ -114,12 +112,14 @@ fn make_tests() -> String {
 pub fn year(item: TokenStream) -> TokenStream {
     let year = item.to_string();
 
-    let mods = make_day_mods();
-    let uses = make_use_days();
+    let days = if year == "2024" { 25 } else { 12 };
 
-    let year_struct = make_year_struct(&year);
+    let mods = make_day_mods(days);
+    let uses = make_use_days(days);
 
-    let tests = make_tests();
+    let year_struct = make_year_struct(&year, days);
+
+    let tests = make_tests(days);
 
     format!(
         "

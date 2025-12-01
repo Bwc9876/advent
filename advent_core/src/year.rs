@@ -1,4 +1,4 @@
-use crate::parser::{Selection, DP};
+use crate::parser::{DP, Selection};
 
 use super::MAX_DAY;
 

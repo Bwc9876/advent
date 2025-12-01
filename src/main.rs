@@ -1,7 +1,7 @@
 use advent_core::{get_ydp_and_input, make_year, Selection, Year, DP, YDP};
 use macros::global_runner;
 
-global_runner!(2024);
+global_runner!(2024, 2025);
 
 fn run_ydp(ydp: YDP, input: Option<String>) {
     let dp = ydp.to_dp();
