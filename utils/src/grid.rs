@@ -156,6 +156,13 @@ impl<T> Grid<T> {
             .and_then(|row| row.get(pos.x as usize))
     }
 
+    /// Obtain a mutable reference to a tile in the grid
+    pub fn get_mut<'a>(&'a mut self, pos: Position) -> Option<&'a mut T> {
+        self.data
+            .get_mut(pos.y as usize)
+            .and_then(|row| row.get_mut(pos.x as usize))
+    }
+
     /// Get a value from the grid at the given position,
     /// panicking if the position is out of bounds.
     ///

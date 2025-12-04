@@ -28,7 +28,7 @@ impl Day for Day2 {
             .flat_map(|r| {
                 r.into_iter().filter(|x| {
                     let digs = num_digits(*x);
-                    (2..=digs).into_iter().filter(|n| digs % n == 0).any(|n| {
+                    (2..=digs).filter(|n| digs.is_multiple_of(*n)).any(|n| {
                         let mut parts = Vec::with_capacity(n);
                         let mut current = *x;
                         let split_at = digs / n;
@@ -40,7 +40,7 @@ impl Day for Day2 {
                         parts
                             .first()
                             .copied()
-                            .map_or(false, |first| parts.into_iter().all(|x| x == first))
+                            .is_some_and(|first| parts.into_iter().all(|x| x == first))
                     })
                 })
             })
