@@ -51,7 +51,22 @@ impl<T: Copy + Clone + Debug + Ord> BetterRange<T> {
     /// ```
     ///
     pub fn contains_range(&self, other: &Self) -> bool {
-        self.start <= other.start && other.end < self.end
+        self.start <= other.start && other.end <= self.end
+    }
+
+    /// Merge this range with another. If the ranges do not intersect, [None] is returned.
+    pub fn merge(&self, other: &Self) -> Option<Self> {
+        if self.contains_range(other) {
+            Some(*self)
+        } else if other.contains_range(self) {
+            Some(*other)
+        } else if self.contains(&other.start) || self.end == other.start {
+            Some(Self::new(self.start, other.end))
+        } else if self.contains(&other.end) || other.end == self.start {
+            Some(Self::new(other.start, self.end))
+        } else {
+            None
+        }
     }
 
     /// Split the range at the given value.
