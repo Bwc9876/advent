@@ -1,6 +1,6 @@
 use std::{fmt::Debug, ops::Range};
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 /// Represents a range of values.
 ///
 /// End is exclusive.
@@ -55,6 +55,27 @@ impl<T: Copy + Clone + Debug + Ord> BetterRange<T> {
     }
 
     /// Merge this range with another. If the ranges do not intersect, [None] is returned.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use utils::prelude::*;
+    ///
+    /// let a = BetterRange::new(1, 5);
+    /// let b = BetterRange::new(6, 11);
+    /// let c = BetterRange::new(4, 8);
+    /// let d = BetterRange::new(3, 4);
+    ///
+    ///
+    /// assert!(a.merge(&b).is_none(), "Should not merge");
+    /// assert!(d.merge(&b).is_none(), "Should not merge");
+    /// assert_eq!(a.merge(&c).unwrap(), BetterRange::new(1, 8), "1-5 & 4-8 = 1-8");
+    /// assert_eq!(c.merge(&a).unwrap(), BetterRange::new(1, 8), "4-8 & 1-5 = 1-8");
+    /// assert_eq!(a.merge(&d).unwrap(), a, "1-5 & 3-4 = 1-5");
+    /// assert_eq!(d.merge(&a).unwrap(), a, "3-4 & 1-5 = 1-5");
+    /// assert_eq!(c.merge(&d).unwrap(), BetterRange::new(3, 8), "4-8 & 3-4 = 3-8");
+    /// assert_eq!(d.merge(&c).unwrap(), BetterRange::new(3, 8), "3-4 & 4-8 = 3-8");
+    /// ```
     pub fn merge(&self, other: &Self) -> Option<Self> {
         if self.contains_range(other) {
             Some(*self)
@@ -161,27 +182,5 @@ where
 
     fn sub(self, rhs: usize) -> Self::Output {
         Self::new(self.start - rhs, self.end - rhs)
-    }
-}
-
-impl<T: Copy + Clone + Debug + Ord> std::ops::BitAnd for BetterRange<T>
-where
-    T: std::ops::BitAnd<Output = T>,
-{
-    type Output = Self;
-
-    fn bitand(self, rhs: Self) -> Self::Output {
-        Self::new(self.start.max(rhs.start), self.end.min(rhs.end))
-    }
-}
-
-impl<T: Copy + Clone + Debug + Ord> std::ops::BitOr for BetterRange<T>
-where
-    T: std::ops::BitOr<Output = T>,
-{
-    type Output = Self;
-
-    fn bitor(self, rhs: Self) -> Self::Output {
-        Self::new(self.start.min(rhs.start), self.end.max(rhs.end))
     }
 }

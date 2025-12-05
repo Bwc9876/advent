@@ -16,7 +16,7 @@ impl Day for Day5 {
     }
 
     fn part_2((mut ranges, _): Self::Input) -> Option<String> {
-        ranges.sort_by(|a, b| a.start.cmp(&b.start).then(a.end.cmp(&b.end)));
+        ranges.sort();
 
         let mut new_ranges = Vec::with_capacity(ranges.len());
 
