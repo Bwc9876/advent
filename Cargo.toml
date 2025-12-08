@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [workspace]
-
-members = ["advent_core", "macros", "utils", "years/*"]
+resolver = "3"
+members = ["advent-hack", "advent_core", "macros", "utils", "years/*"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -14,6 +14,7 @@ y_2025 = { path = "years/2025" }
 y_2024 = { path = "years/2024" }
 advent_core = { path = "advent_core" }
 macros = { path = "macros" }
+advent-hack = { version = "0.1", path = "advent-hack" }
 
 [[bin]]
 name = "advent"

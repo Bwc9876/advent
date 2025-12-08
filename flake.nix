@@ -22,6 +22,8 @@
       src = lib.fileset.toSource {
         root = rawSrc;
         fileset = lib.fileset.unions [
+          ./.config/hakari.toml
+          ./advent-hack
           ./advent_core
           ./src
           ./macros
@@ -97,7 +99,13 @@
           default = pkgs: (mkCrane pkgs).buildCrate "advent";
         };
       checks = pkgs: let
-        inherit (mkCrane pkgs) commonArgs craneLib cargoArtifacts;
+        inherit
+          (mkCrane pkgs)
+          src
+          commonArgs
+          craneLib
+          cargoArtifacts
+          ;
       in
         forAllCrates (name: {
           name = "clippy-${name}";
@@ -120,10 +128,30 @@
               cargoNextestPartitionsExtraArgs = "--no-tests=pass -p ${name}";
             }
           );
-        });
+        })
+        // {
+          advent-hakari = craneLib.mkCargoDerivation {
+            inherit src;
+            pname = "advent-hakari";
+            cargoArtifacts = null;
+            doInstallCargoArtifacts = false;
+
+            buildPhaseCargoCommand = ''
+              cargo hakari generate --diff  # workspace-hack Cargo.toml is up-to-date
+              cargo hakari manage-deps --dry-run  # all workspace crates depend on workspace-hack
+              cargo hakari verify
+            '';
+
+            nativeBuildInputs = [
+              pkgs.cargo-hakari
+            ];
+          };
+        };
       devShell = pkgs:
         (mkCrane pkgs).craneLib.devShell {
           checks = self.checks.${pkgs.system};
+
+          packages = with pkgs; [cargo-hakari];
         };
     };
 }

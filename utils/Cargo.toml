@@ -2,3 +2,6 @@
 name = "utils"
 version = "0.1.0"
 edition = "2021"
+
+[dependencies]
+advent-hack = { version = "0.1", path = "../advent-hack" }

@@ -10,3 +10,4 @@ proc-macro = true
 
 [dependencies]
 advent_core = { path = "../advent_core" }
+advent-hack = { version = "0.1", path = "../advent-hack" }

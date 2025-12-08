@@ -8,3 +8,4 @@ edition = "2024"
 [dependencies]
 indicatif = "0.18.3"
 regex = "1.12.2"
+advent-hack = { version = "0.1", path = "../advent-hack" }
