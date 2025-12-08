@@ -35,9 +35,7 @@ fn get_all_four_unique_changes(init: usize, times: usize) -> HashMap<[isize; 4],
         .fold(HashMap::with_capacity(times / 4), |mut acc, w| {
             let changes = [w[0].0, w[1].0, w[2].0, w[3].0];
             let final_val = w[3].1;
-            if !acc.contains_key(&changes) {
-                acc.insert(changes, final_val);
-            }
+            acc.entry(changes).or_insert(final_val);
             acc
         })
 }

@@ -1,6 +1,6 @@
 use std::env::args;
 use std::fs;
-use std::io::{Read, stdin};
+use std::io::{stdin, Read};
 
 #[derive(Clone, Debug)]
 pub enum Selection {

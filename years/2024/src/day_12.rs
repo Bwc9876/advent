@@ -19,7 +19,7 @@ fn trace_perim(
 ) -> (usize, HashSet<Position>) {
     let mut perims = HashSet::with_capacity(100);
     let mut turns = 0;
-    let mut curs = GridCursor::new(&grid, starting_pos, initial_dir);
+    let mut curs = GridCursor::new(grid, starting_pos, initial_dir);
     let mut init = false;
 
     while (curs.pos, curs.dir) != (starting_pos, initial_dir) || !init {

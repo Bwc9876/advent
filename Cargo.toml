@@ -5,12 +5,7 @@ edition = "2021"
 
 [workspace]
 
-members = [
-    "advent_core",
-    "macros",
-    "utils",
-    "years/*"
-]
+members = ["advent_core", "macros", "utils", "years/*"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

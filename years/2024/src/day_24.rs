@@ -42,7 +42,7 @@ impl Gate {
         let lhs = s.next().unwrap().to_string();
         let op = s.next().unwrap();
         let rhs = s.next().unwrap().to_string();
-        let target = s.skip(1).next().unwrap().to_string();
+        let target = s.nth(1).unwrap().to_string();
         let op = match op {
             "AND" => Op::And,
             "OR" => Op::Or,
@@ -134,7 +134,7 @@ fn test_first_adder(gates: &Gates) -> AdderTestResult {
 // #2 & #5, ^
 // #4 & #5, ^
 //
-fn test_adder(num: usize, carry_input: &String, gates: &Gates) -> AdderTestResult {
+fn test_adder(num: usize, carry_input: &str, gates: &Gates) -> AdderTestResult {
     let x = format!("x{num:02}");
     let y = format!("y{num:02}");
     let z = format!("z{num:02}");
@@ -153,7 +153,7 @@ fn test_adder(num: usize, carry_input: &String, gates: &Gates) -> AdderTestResul
     ) {
         if let Some(Gate {
             target: z_target, ..
-        }) = find_gate(gates, &carry_input, xy_xor_target.as_str(), Op::Xor)
+        }) = find_gate(gates, carry_input, xy_xor_target.as_str(), Op::Xor)
         {
             if *z_target != z {
                 // We know gate #3 is pointing to the wrong target, as it should be pointing to z[]
@@ -173,10 +173,10 @@ fn test_adder(num: usize, carry_input: &String, gates: &Gates) -> AdderTestResul
 
         // From here we've checked all test cases, we can confidently attempt to find the carry
         // output now
-        let carry_xy_target = &find_gate(&gates, xy_xor_target, &carry_input, Op::And)
+        let carry_xy_target = &find_gate(gates, xy_xor_target, carry_input, Op::And)
             .expect("Failed to find carry_xy_target")
             .target;
-        let carry_out = &find_gate(&gates, carry_xy_target, xy_and_target, Op::Or)
+        let carry_out = &find_gate(gates, carry_xy_target, xy_and_target, Op::Or)
             .expect("Failed to find carry_out")
             .target;
         if *carry_out == format!("z{:02}", num + 1) {

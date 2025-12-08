@@ -1,6 +1,6 @@
 use std::ops::RangeInclusive;
 
-use advent_core::{Day, day_stuff, ex_for_day};
+use advent_core::{day_stuff, ex_for_day, Day};
 use utils::num::{num_digits, split_num_at, split_num_once};
 
 pub struct Day2;

@@ -1,10 +1,8 @@
-
-use advent_core::{Day, day_stuff, ex_for_day};
+use advent_core::{day_stuff, ex_for_day, Day};
 
 pub struct Day9;
 
 impl Day for Day9 {
-
     day_stuff!(9, "", "");
 
     fn part_1(_input: Self::Input) -> Option<String> {

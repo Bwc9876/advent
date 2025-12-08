@@ -1,4 +1,4 @@
-use advent_core::{Day, day_stuff, ex_for_day};
+use advent_core::{day_stuff, ex_for_day, Day};
 use utils::range::BetterRange;
 
 pub struct Day5;

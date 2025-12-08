@@ -107,11 +107,10 @@ impl Day for Day9 {
         loop {
             if let (Block::File(_), _) = input.data[i] {
                 let next_blank = input.iter_blanks_before(i).next();
-                if let Some((j, _)) = next_blank {
-                    if input.swap_blocks(i, j) {
+                if let Some((j, _)) = next_blank
+                    && input.swap_blocks(i, j) {
                         i += 1;
                     }
-                }
             }
             if i == 0 {
                 break;
@@ -131,11 +130,10 @@ impl Day for Day9 {
                 let next_blank = input
                     .iter_blanks_before(i)
                     .find(|(_, b_amnt)| *b_amnt >= size);
-                if let Some((j, _)) = next_blank {
-                    if input.swap_blocks(i, j) {
+                if let Some((j, _)) = next_blank
+                    && input.swap_blocks(i, j) {
                         i += 1;
                     }
-                }
             }
             if i == 0 {
                 break;

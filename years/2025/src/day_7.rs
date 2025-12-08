@@ -1,6 +1,6 @@
 use std::collections::{HashMap, HashSet, VecDeque};
 
-use advent_core::{Day, day_stuff, ex_for_day};
+use advent_core::{day_stuff, ex_for_day, Day};
 use utils::{dir::Direction, pos::Position, tiles};
 
 pub struct Day7;

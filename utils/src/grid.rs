@@ -157,7 +157,7 @@ impl<T> Grid<T> {
     }
 
     /// Obtain a mutable reference to a tile in the grid
-    pub fn get_mut<'a>(&'a mut self, pos: Position) -> Option<&'a mut T> {
+    pub fn get_mut(&mut self, pos: Position) -> Option<&mut T> {
         self.data
             .get_mut(pos.y as usize)
             .and_then(|row| row.get_mut(pos.x as usize))

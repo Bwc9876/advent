@@ -1,6 +1,6 @@
 use std::{collections::HashMap, ops::Sub};
 
-use advent_core::{Day, day_stuff, ex_for_day};
+use advent_core::{day_stuff, ex_for_day, Day};
 
 pub struct Day8;
 
@@ -48,23 +48,16 @@ impl Day for Day8 {
 
         let mut counts = circuits
             .into_iter()
-            .fold(HashMap::new(), |mut acc, (_, c)| {
+            .fold(HashMap::with_capacity(input.len()), |mut acc, (_, c)| {
                 *(acc.entry(c).or_insert(0)) += 1;
                 acc
             })
-            .into_iter()
-            .map(|(_, count)| count)
+            .into_values()
             .collect::<Vec<_>>();
 
         counts.sort_by(|a, b| a.cmp(b).reverse());
 
-        Some(
-            counts
-                .into_iter()
-                .take(3)
-                .fold(1, |acc, x| acc * x)
-                .to_string(),
-        )
+        Some(counts.into_iter().take(3).product::<i32>().to_string())
     }
 
     fn part_2((_amnt, input): Self::Input) -> Option<String> {
@@ -99,7 +92,7 @@ impl Day for Day8 {
             }
         }
 
-        let (a, b) = last_2.unwrap();
+        let (a, b) = last_2.expect("Womp womp");
 
         Some((a.0 * b.0).to_string())
     }

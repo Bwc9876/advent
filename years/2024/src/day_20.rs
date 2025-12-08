@@ -28,8 +28,7 @@ impl Day for Day20 {
             costs.insert(curs, cost);
             let (_, next_pos, _) = input
                 .relatives(curs, &CARDINALS)
-                .filter(|(_, p, t)| **t != Tile::Wall && !costs.contains_key(p))
-                .next()
+                .find(|(_, p, t)| **t != Tile::Wall && !costs.contains_key(p))
                 .unwrap();
             curs = next_pos;
             cost += 1;
@@ -41,7 +40,7 @@ impl Day for Day20 {
             for (pos_b, cost_b) in costs.iter() {
                 if cost_b < cost_a {
                     let diff = *cost_a - *cost_b;
-                    let dist = pos_a.manhattan(&pos_b).abs() as usize;
+                    let dist = pos_a.manhattan(pos_b).unsigned_abs();
                     if dist <= 2 {
                         cheat_set.insert((*pos_a, *pos_b), diff - dist);
                     }
@@ -64,8 +63,7 @@ impl Day for Day20 {
             costs.insert(curs, cost);
             let (_, next_pos, _) = input
                 .relatives(curs, &CARDINALS)
-                .filter(|(_, p, t)| **t != Tile::Wall && !costs.contains_key(p))
-                .next()
+                .find(|(_, p, t)| **t != Tile::Wall && !costs.contains_key(p))
                 .unwrap();
             curs = next_pos;
             cost += 1;
@@ -77,7 +75,7 @@ impl Day for Day20 {
             for (pos_b, cost_b) in costs.iter() {
                 if cost_b < cost_a {
                     let diff = *cost_a - *cost_b;
-                    let dist = pos_a.manhattan(&pos_b).abs() as usize;
+                    let dist = pos_a.manhattan(pos_b).unsigned_abs();
                     if dist <= 20 {
                         cheat_set.insert((*pos_a, *pos_b), diff - dist);
                     }

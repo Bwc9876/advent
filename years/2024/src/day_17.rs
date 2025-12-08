@@ -10,7 +10,7 @@ pub struct Registers {
 }
 
 impl Registers {
-    fn from_combo_op(&self, combo_op: &ComboOperand) -> u128 {
+    fn with_combo_op(&self, combo_op: &ComboOperand) -> u128 {
         match combo_op {
             ComboOperand::RegA => self.a,
             ComboOperand::RegB => self.b,
@@ -44,7 +44,7 @@ impl ComboOperand {
         match self {
             Self::Literal(v) => *v,
             Self::Reserved => panic!(),
-            reg => regs.from_combo_op(reg),
+            reg => regs.with_combo_op(reg),
         }
     }
 }
@@ -85,7 +85,7 @@ impl Instruction {
                 regs.a /= 2_u128.pow(op.get_val(regs) as u32);
             }
             Self::Bxl(v) => {
-                regs.b = regs.b ^ v;
+                regs.b ^= v;
             }
             Self::Bst(op) => {
                 regs.b = op.get_val(regs) % 8;
@@ -96,7 +96,7 @@ impl Instruction {
                 }
             }
             Self::Bxc(_) => {
-                regs.b = regs.b ^ regs.c;
+                regs.b ^= regs.c;
             }
             Self::Out(op) => {
                 return (ip + 2, Some(op.get_val(regs) % 8));

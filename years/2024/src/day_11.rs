@@ -20,14 +20,12 @@ pub fn do_blinks(stones: Vec<usize>, blinks: usize) -> usize {
         for (num, count) in stone_map {
             if num == 0 {
                 *new_map.entry(1).or_insert(0) += count;
+            } else if num_digits(num).is_multiple_of(2) {
+                let (left, right) = split_num_once(num);
+                *new_map.entry(left).or_insert(0) += count;
+                *new_map.entry(right).or_insert(0) += count;
             } else {
-                if num_digits(num) % 2 == 0 {
-                    let (left, right) = split_num_once(num);
-                    *new_map.entry(left).or_insert(0) += count;
-                    *new_map.entry(right).or_insert(0) += count;
-                } else {
-                    *new_map.entry(num * 2024).or_insert(0) += count;
-                }
+                *new_map.entry(num * 2024).or_insert(0) += count;
             }
         }
 

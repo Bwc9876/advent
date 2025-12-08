@@ -1,4 +1,4 @@
-use advent_core::{Day, day_stuff, ex_for_day};
+use advent_core::{day_stuff, ex_for_day, Day};
 
 pub struct Day6;
 
@@ -22,13 +22,7 @@ impl Day for Day6 {
                     .collect::<Vec<_>>()
             })
             .collect::<Vec<_>>();
-        let ops = uno
-            .iter()
-            .skip(uno.len() - 1)
-            .next()
-            .unwrap()
-            .split_whitespace()
-            .collect::<Vec<_>>();
+        let ops = uno.last().unwrap().split_whitespace().collect::<Vec<_>>();
         let mut problems = Vec::with_capacity(uno.len());
 
         for i in 0..dos[0].len() {
@@ -57,7 +51,7 @@ impl Day for Day6 {
     fn part_2(input: Self::Input) -> Option<String> {
         let mut cols: Vec<Vec<_>> = vec![];
 
-        for (_, row) in input.lines().enumerate() {
+        for row in input.lines() {
             for (j, c) in row.chars().enumerate() {
                 if let Some(r) = cols.get_mut(j) {
                     r.push(c);
