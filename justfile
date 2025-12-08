@@ -2,6 +2,9 @@
 _default:
     @just --list --unsorted --justfile {{justfile()}}
 
+checkall:
+	nix flake check
+
 year := `date +%Y`
 day := `nu -c 'date now | format date "%_d" | str trim'`
 
@@ -32,3 +35,6 @@ test-all:
 # Open Editor to today's file
 start:
     nvim years/{{year}}/src/day_{{day}}.rs
+
+hakari:
+	  cargo hakari generate
