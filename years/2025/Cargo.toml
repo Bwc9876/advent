@@ -10,3 +10,6 @@ macros = { path = "../../macros" }
 rayon = "1.11.0"
 utils = { path = "../../utils" }
 advent-hack = { version = "0.1", path = "../../advent-hack" }
+good_lp = { version = "1.14.2", features = [
+  "microlp",
+], default-features = false }
