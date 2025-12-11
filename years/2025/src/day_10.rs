@@ -24,11 +24,10 @@ impl Day for Day10 {
                 let buttons = mach
                     .buttons
                     .iter()
-                    .map(|b| b.iter().map(|n| 2_usize.pow(*n as u32)).sum())
+                    .map(|b| b.iter().map(|n| 1 << *n).fold(0, |acc, x| acc | x))
                     .collect::<Vec<_>>();
 
-                let mut queue: VecDeque<(usize, usize, Option<usize>)> =
-                    VecDeque::with_capacity(30);
+                let mut queue = VecDeque::with_capacity(30);
                 queue.push_front((0, 0, None));
                 let mut guy = None;
                 while let Some((val, curr, prev)) = queue.pop_front() {
@@ -78,7 +77,10 @@ impl Day for Day10 {
 
                 let sol = problem.solve().expect("womp womp");
 
-                press_vars.iter().map(|&v| sol.value(v)).sum::<f64>() as usize
+                press_vars
+                    .iter()
+                    .map(|&v| sol.value(v) as usize)
+                    .sum::<usize>()
             })
             .sum::<usize>();
 
@@ -90,35 +92,28 @@ impl Day for Day10 {
             .lines()
             .map(|l| {
                 let split = l.split(' ').collect::<Vec<_>>();
-                let diag = split
-                    .first()
-                    .unwrap()
+
+                let first = split[0];
+                let diag = first[1..(first.len() - 1)]
                     .chars()
-                    .filter(|c| *c == '.' || *c == '#')
                     .enumerate()
-                    .map(|(i, d)| {
-                        (if d == '.' { 0_usize } else { 1_usize }) * 2_usize.pow(i as u32)
-                    })
-                    .sum();
+                    .map(|(i, d)| (if d == '.' { 0_usize } else { 1_usize }) * (1 << i))
+                    .fold(0, |acc, x| acc | x);
 
                 let buttons = split
                     .iter()
                     .take(split.len() - 1)
                     .skip(1)
                     .map(|b| {
-                        b.trim_matches('(')
-                            .trim_matches(')')
+                        b[1..b.len() - 1]
                             .split(',')
                             .map(|n| n.parse().unwrap())
                             .collect()
                     })
                     .collect();
 
-                let target_counters = split
-                    .last()
-                    .unwrap()
-                    .trim_matches('{')
-                    .trim_matches('}')
+                let last = split[split.len() - 1];
+                let target_counters = last[1..last.len() - 1]
                     .split(',')
                     .map(|n| n.parse().unwrap())
                     .collect();
