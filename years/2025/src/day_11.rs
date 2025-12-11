@@ -5,11 +5,15 @@ use advent_core::{day_stuff, ex_for_day, Day};
 pub struct Day11;
 
 type Graph = HashMap<String, Vec<String>>;
-type Seen = HashMap<(String, bool, bool), usize>;
+type Seen<'a> = HashMap<(&'a String, bool, bool), usize>;
 
-fn all_paths_to_out(node: &String, graph: &Graph, seen: &mut HashMap<String, usize>) -> usize {
-    if let Some(memo) = seen.get(node).copied() {
-        memo
+fn all_paths_to_out<'a>(
+    node: &'a String,
+    graph: &'a Graph,
+    seen: &mut HashMap<&'a String, usize>,
+) -> usize {
+    if let Some(memo) = seen.get(&node) {
+        *memo
     } else if let Some(nexts) = graph.get(node) {
         let mut amnt = 0;
         for next in nexts.iter() {
@@ -19,22 +23,22 @@ fn all_paths_to_out(node: &String, graph: &Graph, seen: &mut HashMap<String, usi
                 amnt += all_paths_to_out(next, graph, seen);
             }
         }
-        seen.insert(node.clone(), amnt);
+        seen.insert(node, amnt);
         amnt
     } else {
         0
     }
 }
 
-fn all_paths_to_out_with_constraints(
-    node: &String,
+fn all_paths_to_out_with_constraints<'a>(
+    node: &'a String,
     saw_dac: bool,
     saw_fft: bool,
-    graph: &Graph,
-    seen: &mut Seen,
+    graph: &'a Graph,
+    seen: &mut Seen<'a>,
 ) -> usize {
-    if let Some(memo) = seen.get(&(node.clone(), saw_dac, saw_fft)).copied() {
-        memo
+    if let Some(memo) = seen.get(&(node, saw_dac, saw_fft)) {
+        *memo
     } else if let Some(nexts) = graph.get(node) {
         let mut amnt = 0;
         for next in nexts.iter() {
@@ -52,7 +56,7 @@ fn all_paths_to_out_with_constraints(
                 );
             }
         }
-        seen.insert((node.clone(), saw_dac, saw_fft), amnt);
+        seen.insert((node, saw_dac, saw_fft), amnt);
         amnt
     } else {
         0
