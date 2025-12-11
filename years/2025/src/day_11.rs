@@ -5,13 +5,10 @@ use advent_core::{day_stuff, ex_for_day, Day};
 pub struct Day11;
 
 type Graph = HashMap<String, Vec<String>>;
-type Seen<'a> = HashMap<(&'a String, bool, bool), usize>;
+type Seen<'a> = HashMap<&'a String, usize>;
+type SeenConstrained<'a> = HashMap<(&'a String, bool, bool), usize>;
 
-fn all_paths_to_out<'a>(
-    node: &'a String,
-    graph: &'a Graph,
-    seen: &mut HashMap<&'a String, usize>,
-) -> usize {
+fn all_paths_to_out<'a>(node: &'a String, graph: &'a Graph, seen: &mut Seen<'a>) -> usize {
     if let Some(memo) = seen.get(&node) {
         *memo
     } else if let Some(nexts) = graph.get(node) {
@@ -30,27 +27,27 @@ fn all_paths_to_out<'a>(
     }
 }
 
-fn all_paths_to_out_with_constraints<'a>(
+fn all_paths_to_out_constrained<'a>(
     node: &'a String,
     saw_dac: bool,
     saw_fft: bool,
     graph: &'a Graph,
-    seen: &mut Seen<'a>,
+    seen: &mut SeenConstrained<'a>,
 ) -> usize {
     if let Some(memo) = seen.get(&(node, saw_dac, saw_fft)) {
         *memo
     } else if let Some(nexts) = graph.get(node) {
         let mut amnt = 0;
         for next in nexts.iter() {
-            if next == "out" && saw_fft && saw_dac {
-                amnt += 1;
+            if next == "out" {
+                if saw_dac && saw_fft {
+                    amnt += 1;
+                }
             } else {
-                let is_dac = next == "dac";
-                let is_fft = next == "fft";
-                amnt += all_paths_to_out_with_constraints(
+                amnt += all_paths_to_out_constrained(
                     next,
-                    saw_dac || is_dac,
-                    saw_fft || is_fft,
+                    saw_dac || next == "dac",
+                    saw_fft || next == "fft",
                     graph,
                     seen,
                 );
@@ -76,7 +73,7 @@ impl Day for Day11 {
     fn part_2(input: Self::Input) -> Option<String> {
         let mut seen = HashMap::with_capacity(input.len());
         let start = "svr".to_string();
-        let ans = all_paths_to_out_with_constraints(&start, false, false, &input, &mut seen);
+        let ans = all_paths_to_out_constrained(&start, false, false, &input, &mut seen);
         Some(ans.to_string())
     }
 
